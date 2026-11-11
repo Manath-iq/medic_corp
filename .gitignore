@@ -1,0 +1,23 @@
+# Private client correspondence and internal research: never publish.
+/chat_client/
+/docs/
+/.codex-context/
+/.claude/
+/.tastemaker/
+/README.md
+/brand-spec.md
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.log
+*.tsbuildinfo
+/public/assets/clinic/*.jpg
+/design/image-originals/
+/design/image-candidates/
+/design/image-contact-sheet.jpg
