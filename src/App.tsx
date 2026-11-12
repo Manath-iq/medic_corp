@@ -15,7 +15,9 @@ export default function App() {
   const root = useRef<HTMLDivElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [category, setCategory] = useState('Все консультации')
+  const [pricesExpanded, setPricesExpanded] = useState(false)
   const categories = ['Все консультации', ...new Set(prices.map(price => price.category))]
+  const visiblePrices = prices.filter(price => category === 'Все консультации' || category === price.category)
 
   useLayoutEffect(() => {
     const media = gsap.matchMedia()
@@ -29,8 +31,13 @@ export default function App() {
         gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach(element => {
           gsap.from(element, { y: 18, opacity: 0, duration: 0.65, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 93%', once: true } })
         })
-        gsap.fromTo('.statement-word', { opacity: 0.26 }, { opacity: 1, stagger: 0.12, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top 75%', end: 'bottom 60%', scrub: true } })
         gsap.to('.hero-image', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
+      }, root)
+      return () => context.revert()
+    })
+    media.add('(prefers-reduced-motion: no-preference) and (min-width: 701px)', () => {
+      const context = gsap.context(() => {
+        gsap.fromTo('.statement-word', { opacity: 0.26 }, { opacity: 1, stagger: 0.12, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top 75%', end: 'bottom 60%', scrub: true } })
       }, root)
       return () => context.revert()
     })
@@ -63,8 +70,8 @@ export default function App() {
         <div className="hero-slab">
           <div className="hero-copy">
             <p className="hero-context"><span className="signal-dot" />Репродуктивное здоровье · Казань</p>
-            <h1 id="hero-title" className="hero-title">Большая мечта<br />начинается<br /><span>с первого шага.</span></h1>
-            <div className="hero-support"><p className="hero-lead">Диагностика, лечение бесплодия и ЭКО.<br className="desktop-break" /> Рядом, чтобы помочь вам найти свой путь.</p><div className="hero-actions"><a href="#contact" className="button button-primary">Обсудить первый приём <ArrowUpRight /></a><a href="#directions" className="hero-secondary">Направления <ArrowDown /></a></div></div>
+            <h1 id="hero-title" className="hero-title"><span className="desktop-copy">Большая мечта<br />начинается<br /><span className="hero-title-accent">с первого шага.</span></span><span className="mobile-copy">Лечение бесплодия<br /><span className="hero-title-accent">и ЭКО.</span></span></h1>
+            <div className="hero-support"><p className="hero-lead"><span className="desktop-copy">Диагностика, лечение бесплодия и ЭКО.<br className="desktop-break" /> Рядом, чтобы помочь вам найти свой путь.</span><span className="mobile-copy">Репродуктологи, гинекологи и эмбриологи в Казани.</span></p><div className="hero-actions"><a href="#contact" className="button button-primary">Обсудить первый приём <ArrowUpRight /></a><a href="#directions" className="hero-secondary">Направления <ArrowDown /></a></div></div>
             <div className="hero-location"><span>Клиника семейной медицины</span><span>Казань, Зур Урам, 33</span></div>
           </div>
           <figure className="hero-visual"><img className="hero-image" src={media('hero').src} alt={media('hero').generated ? 'Художественная визуализация лабораторного натюрморта на тему эмбриологии' : 'Эмбриологическая работа под микроскопом — фотография из материалов клиники'} width={1140} height={648} fetchPriority="high" /><div className="hero-visual-shade" /><figcaption><span>Здесь зарождается жизнь</span><span className="hero-visual-note">{media('hero').generated ? 'Художественная визуализация' : 'Эмбриология и репродуктивные технологии'}</span></figcaption><span className="hero-image-index" aria-hidden="true">КСМ / КАЗАНЬ</span></figure>
@@ -80,14 +87,14 @@ export default function App() {
       </section>
 
       <section id="doctors" className="doctors-section section container">
-        <div className="section-heading" data-reveal><h2>За каждым решением —<br />конкретный человек.</h2><p>Специалисты по репродуктивному здоровью<br className="desktop-break" /> и эмбриологии. Познакомьтесь ближе.</p></div>
+        <div className="section-heading" data-reveal><h2><span className="desktop-copy">За каждым решением —<br />конкретный человек.</span><span className="mobile-copy">Специалисты<br />клиники.</span></h2><p className="desktop-copy">Специалисты по репродуктивному здоровью<br className="desktop-break" /> и эмбриологии. Познакомьтесь ближе.</p></div>
         <ul className="doctor-grid">{specialists.map((doctor, index) => <li key={doctor.name} className="doctor-card" data-reveal><a className="doctor-photo" href={doctor.url} target="_blank" rel="noreferrer" aria-label={`${doctor.name} ${doctor.given}: сведения на сайте клиники`}><img src={asset(doctor.image)} alt={`${doctor.name} ${doctor.given}`} width={450} height={675} loading="lazy" /><span className="doctor-number">0{index + 1}</span><span className="doctor-open"><ArrowUpRight /></span></a><h3>{doctor.name}<span>{doctor.given}</span></h3><p className="doctor-role">{doctor.role}</p><p className="doctor-detail">{doctor.detail}</p></li>)}</ul>
         <a className="text-link all-specialists" href="https://ksm-eko.ru/index.php/home/specialisty" target="_blank" rel="noreferrer">Все специалисты на сайте клиники <ArrowUpRight /></a>
       </section>
 
       <section id="prices" className="prices-section section container">
         <div className="prices-layout"><div className="prices-intro" data-reveal><span className="section-kicker">Стоимость консультаций</span><h2>Первый шаг.<br />Понятная цена.</h2><p>Выберите консультацию.<br />Полный перечень исследований и программ — в прайсе клиники.</p><a className="button button-outline" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a><span className="price-source">По открытому прайсу КСМ.<br />Актуальность уточните при записи.</span></div>
-          <div className="price-panel" data-reveal><div className="price-filters" aria-label="Категории консультаций">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => setCategory(item)}>{item}</button>)}</div><ul className="price-list">{prices.filter(price => category === 'Все консультации' || category === price.category).map(price => <li key={price.name}><div><h3>{price.name}</h3><p>{price.note}</p></div><span className="price-amount">{rubles(price.amount)}</span><a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a></li>)}</ul><p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
+          <div className="price-panel" data-reveal><div className="price-filters" aria-label="Категории консультаций">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setPricesExpanded(false) }}>{item}</button>)}</div><ul id="consultation-prices" className={`price-list ${pricesExpanded ? 'is-expanded' : ''}`}>{visiblePrices.map((price, index) => <li className={index > 2 ? 'price-extra' : undefined} key={price.name}><div><h3>{price.name}</h3><p>{price.note}</p></div><span className="price-amount">{rubles(price.amount)}</span><a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a></li>)}</ul>{visiblePrices.length > 3 && <button type="button" className="price-expand button button-outline" aria-expanded={pricesExpanded} aria-controls="consultation-prices" onClick={() => setPricesExpanded(!pricesExpanded)}>{pricesExpanded ? 'Свернуть список' : 'Показать все консультации'}</button>}<p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
         </div>
       </section>
 

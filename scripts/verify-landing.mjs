@@ -7,14 +7,15 @@ import { resolve } from 'node:path'
 
 const require = createRequire(import.meta.url)
 const paths = [process.env.QA_TOOLS_DIR || process.cwd()]
-const { chromium } = require(require.resolve('playwright-core', { paths }))
+const engines = require(require.resolve('playwright-core', { paths }))
+const engine = process.env.QA_BROWSER || 'chromium'
 const axePath = require.resolve('axe-core/axe.min.js', { paths })
 const output = process.env.QA_OUTPUT_DIR || resolve('test-results/landing')
 await mkdir(output, { recursive: true })
-const browser = await chromium.launch({
+const browser = await engines[engine].launch(engine === 'chromium' ? {
   executablePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   headless: true,
-})
+} : { headless: true })
 const reports = []
 try {
   for (const width of [320, 390, 768, 1024, 1440]) {
@@ -32,8 +33,9 @@ try {
         await page.waitForFunction(node => Number(getComputedStyle(node).opacity) > .99, await reveal.elementHandle())
       }
     }
-    for (const button of await page.locator('.direction-index button').all()) {
-      await button.click()
+    for (let index = 0; index < 6; index++) {
+      if (width <= 700) await page.locator('.direction-picker select').selectOption(String(index))
+      else await page.locator('.direction-index button').nth(index).click()
       await page.locator('.fan-stage').scrollIntoViewIfNeeded()
       await page.waitForFunction(() => {
         const image = document.querySelector('.is-current img')
@@ -54,8 +56,12 @@ try {
         }
         throw new Error('No solid ancestor for palette sample')
       }
-      return ['body', '.nav-actions .button-primary', '.hero-title > span', '.hero-lead', '.hero-actions .button-primary', '.is-current .direction-select', '.price-panel-note', '.oms-copy .button-primary', '.contact-slab .button-primary'].map(selector => {
-        const element = document.querySelector(selector)
+      return ['body', '.nav-actions .button-primary', '.hero-title-accent', '.hero-lead', '.hero-actions .button-primary', '.is-current .direction-select', '.price-panel-note', '.oms-copy .button-primary', '.contact-slab .button-primary', '.direction-picker select', '.price-expand'].filter(selector => {
+        const nodes = [...document.querySelectorAll(selector)]
+        return nodes.some(node => node.getClientRects().length) || selector === '.nav-actions .button-primary'
+      }).map(selector => {
+        const nodes = [...document.querySelectorAll(selector)]
+        const element = nodes.find(node => node.getClientRects().length) || nodes[0]
         const foreground = getComputedStyle(element).color
         const bg = background(element)
         const values = [luminance(rgb(foreground)), luminance(rgb(bg))].sort((a, b) => b - a)
@@ -67,6 +73,8 @@ try {
     await page.locator('#oms').scrollIntoViewIfNeeded()
     const local = page.getByRole('radio', { name: 'Татарстан', exact: true })
     const regional = page.getByRole('radio', { name: 'Другие регионы РФ', exact: true })
+    // Set keyboard modality before programmatic focus; WebKit does not infer it from arrow input.
+    await page.keyboard.press('Tab')
     await local.focus()
     await page.keyboard.press('ArrowRight')
     assert.equal(await regional.isChecked(), true)
@@ -123,12 +131,12 @@ try {
 
     await page.addScriptTag({ path: axePath })
     const axe = await page.evaluate(async () => {
-      const result = await window.axe.run({ include: ['#oms', '#start', '#about', '#faq'] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } })
+      const result = await window.axe.run({ include: ['.hero', '#directions', '#doctors', '#prices', '#oms', '#start', '#about', '#faq'] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } })
       return result.violations.map(item => ({ id: item.id, impact: item.impact, nodes: item.nodes.map(node => node.target) }))
     })
     assert.deepEqual(axe, [], `Accessibility at ${width}: ${JSON.stringify(axe)}`)
     if (width === 390 || width === 1440) {
-      for (const selector of ['.hero', '#oms', '#start', '#about', '#faq']) {
+      for (const selector of ['.hero', '#directions', '#doctors', '#prices', '#oms', '#start', '#about', '#faq']) {
         // Hide only fixed chrome in isolated section captures; interaction tests use the real header.
         await page.locator(selector).screenshot({ path: resolve(output, `${width}-${selector.slice(1)}.png`), style: selector === '.hero' ? '.skip-link { visibility: hidden !important; }' : '.site-header,.skip-link { visibility: hidden !important; }' })
       }

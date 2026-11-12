@@ -20,7 +20,7 @@ export function OmsSection() {
       <div className="oms-top">
         <div className="oms-copy" data-reveal>
           <span className="section-kicker">ЭКО по ОМС</span>
-          <h2 id="oms-title">Начнём<br />с понятного<br /><span>маршрута.</span></h2>
+          <h2 id="oms-title"><span className="desktop-copy">Начнём<br />с понятного<br /><span>маршрута.</span></span><span className="mobile-copy">Как пройти<br />ЭКО по ОМС.</span></h2>
           <p>Для жителей Татарстана и других регионов России. Порядок направления зависит от региона — разберёмся с первым шагом.</p>
           <a className="button button-primary" href={clinic.phoneHref}>Уточнить участие <ArrowUpRight /></a>
         </div>
@@ -92,10 +92,10 @@ export function StartSection() {
 
   return <section id="start" className="start-section section container" aria-labelledby="start-title">
     <div className="start-layout">
-      <div className="start-intro" data-reveal><span className="section-kicker">Как начать</span><h2 id="start-title">Не весь путь сразу.<br />Только ближайший шаг.</h2><p>Не нужно разбираться во всём до первой встречи. Начните с записи — дальнейший план обсудите с врачом.</p><a className="text-link" href="#contact">Контакты клиники <ArrowUpRight /></a></div>
+      <div className="start-intro" data-reveal><span className="section-kicker">Как начать</span><h2 id="start-title"><span className="desktop-copy">Не весь путь сразу.<br />Только ближайший шаг.</span><span className="mobile-copy">Первый визит<br />в три шага.</span></h2><p className="desktop-copy">Не нужно разбираться во всём до первой встречи. Начните с записи — дальнейший план обсудите с врачом.</p><a className="text-link" href="#contact">Контакты клиники <ArrowUpRight /></a></div>
       <div ref={list} className="start-route-wrap">
         <span className="route-line" aria-hidden="true"><span className="route-fill" /></span>
-        <ol className="start-route">{firstSteps.map(step => <li className="route-step" key={step.id}><span className="route-marker" aria-hidden="true">{step.number}</span><div><h3>{step.title}</h3><p>{step.body}</p><a className="text-link" href={step.href} {...(step.href.startsWith('https:') ? { target: '_blank', rel: 'noreferrer' } : {})}>{step.label}<ArrowUpRight /></a></div></li>)}</ol>
+        <ol className="start-route">{firstSteps.map(step => <li className="route-step" key={step.id}><span className="route-marker" aria-hidden="true">{step.number}</span><div><h3>{step.title}</h3><p><span className="desktop-copy">{step.body}</span><span className="mobile-copy">{step.shortBody}</span></p><a className="text-link" href={step.href} {...(step.href.startsWith('https:') ? { target: '_blank', rel: 'noreferrer' } : {})}>{step.label}<ArrowUpRight /></a></div></li>)}</ol>
       </div>
     </div>
   </section>
