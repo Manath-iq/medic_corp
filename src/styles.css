@@ -1,19 +1,19 @@
 /* tastemaker · macrostructure: Long-Scroll Narrative · mood: warm/premium · page: KSM landing v0
  * arc: hook(H2/photo) -> solution(fan) -> empathy(statement) -> proof(real specialists) -> price(F6) -> access(OMS/route) -> context(about/FAQ) -> close(C2)
  * nav: N3 · hero: H2 · footer: Ft1 · reference: user's DENTIS c78868e; no generated clinic imagery
- * palette: refined KSM blue/white · contrast: matrix verified; contextual action labels
+ * palette: KSM navy / warm beige · contrast: matrix verified; contextual action labels
  * critique (planning): ShowTell 4 · Phil 4 · Hier 5 · Spec 5 · Restr 4 · Var 4 */
 
 :root {
-  --bg: #f4f7fb; --surface: #ffffff; --surface-2: #e7eef7;
-  --ink: #1b2e49; --muted: #56657a; --dark: #172e50;
-  --primary: #3564c5; --primary-hover: #2953aa;
-  --accent-soft: #bad4fa; --accent-soft-hover: #d5e4fb;
+  --bg: #f4efe7; --surface: #fffdf9; --surface-2: #e7ddce;
+  --ink: #1b2e49; --muted: #5c6268; --dark: #172e50;
+  --primary: #2f5683; --primary-hover: #234464;
+  --accent-soft: #ded1bd; --accent-soft-hover: #ece2d2;
   --action-bg: var(--primary); --action-hover: var(--primary-hover); --action-ink: #ffffff;
-  --on-dark: #ffffff; --on-dark-muted: #c4d0e2;
+  --on-dark: #ffffff; --on-dark-muted: #d8d8d3;
   --line: rgb(27 46 73 / 12%); --dark-line: rgb(255 255 255 / 18%);
   --hero-shade: rgb(23 46 80 / 90%); --photo-shade: rgb(23 46 80 / 90%);
-  --nav-glass: rgb(255 255 255 / 85%); --label-glass: rgb(255 255 255 / 94%);
+  --nav-glass: rgb(255 253 249 / 90%); --label-glass: rgb(255 253 249 / 96%);
   --shadow-nav: 0 2px 3px rgb(27 46 73 / 3%), 0 12px 32px -18px rgb(27 46 73 / 24%);
   --shadow-card: 0 2px 4px rgb(27 46 73 / 4%), 0 24px 56px -20px rgb(27 46 73 / 23%);
   --font: 'Manrope Variable', 'Manrope', sans-serif;

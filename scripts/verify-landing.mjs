@@ -44,6 +44,25 @@ try {
     assert.equal(await page.locator('h1').count(), 1)
     assert.deepEqual(await page.locator('a[href^="#"]').evaluateAll(links => links.filter(link => !document.getElementById(link.hash.slice(1))).map(link => link.hash)), [])
     assert.deepEqual(await page.locator('img').evaluateAll(images => images.filter(img => !img.complete || !img.naturalWidth).map(img => img.src)), [])
+    const contrast = await page.evaluate(() => {
+      const luminance = rgb => rgb.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4).reduce((sum, value, index) => sum + value * [.2126, .7152, .0722][index], 0)
+      const rgb = color => color.match(/[\d.]+/g).slice(0, 3).map(Number)
+      const background = element => {
+        for (let node = element; node; node = node.parentElement) {
+          const color = getComputedStyle(node).backgroundColor
+          if (!color.startsWith('rgba(')) return color
+        }
+        throw new Error('No solid ancestor for palette sample')
+      }
+      return ['body', '.nav-actions .button-primary', '.hero-title > span', '.hero-lead', '.hero-actions .button-primary', '.is-current .direction-select', '.price-panel-note', '.oms-copy .button-primary', '.contact-slab .button-primary'].map(selector => {
+        const element = document.querySelector(selector)
+        const foreground = getComputedStyle(element).color
+        const bg = background(element)
+        const values = [luminance(rgb(foreground)), luminance(rgb(bg))].sort((a, b) => b - a)
+        return { selector, foreground, background: bg, ratio: (values[0] + .05) / (values[1] + .05) }
+      })
+    })
+    assert.deepEqual(contrast.filter(pair => pair.ratio < 4.5), [], `Rendered palette contrast at ${width}`)
 
     await page.locator('#oms').scrollIntoViewIfNeeded()
     const local = page.getByRole('radio', { name: 'Татарстан', exact: true })
@@ -109,13 +128,13 @@ try {
     })
     assert.deepEqual(axe, [], `Accessibility at ${width}: ${JSON.stringify(axe)}`)
     if (width === 390 || width === 1440) {
-      for (const selector of ['#oms', '#start', '#about', '#faq']) {
+      for (const selector of ['.hero', '#oms', '#start', '#about', '#faq']) {
         // Hide only fixed chrome in isolated section captures; interaction tests use the real header.
-        await page.locator(selector).screenshot({ path: resolve(output, `${width}-${selector.slice(1)}.png`), style: '.site-header,.skip-link { visibility: hidden !important; }' })
+        await page.locator(selector).screenshot({ path: resolve(output, `${width}-${selector.slice(1)}.png`), style: selector === '.hero' ? '.skip-link { visibility: hidden !important; }' : '.site-header,.skip-link { visibility: hidden !important; }' })
       }
     }
     assert.deepEqual(errors, [], `Console at ${width}`)
-    reports.push({ width, overflow: false, regionalRadioKeyboard: true, faqKeyboardAndExclusive: true, routeForwardAndReverse: true, axeViolations: axe, consoleErrors: errors })
+    reports.push({ width, overflow: false, regionalRadioKeyboard: true, faqKeyboardAndExclusive: true, routeForwardAndReverse: true, renderedPaletteContrast: contrast, axeViolations: axe, consoleErrors: errors })
     console.log(`Passed ${width}px`)
     await context.close()
   }
