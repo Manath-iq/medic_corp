@@ -3,9 +3,11 @@ import { ArrowDown, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-i
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DirectionFan from './DirectionFan'
+import { LocationSection, ReviewsSection } from './ClinicTrust'
 import { AboutSection, FaqSection, OmsSection, StartSection } from './LandingSections'
 import { asset, clinic, prices, rubles, specialists } from './data'
 import { media } from './media'
+import { yandexClinic } from './yandex'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -92,6 +94,8 @@ export default function App() {
         <a className="text-link all-specialists" href="https://ksm-eko.ru/index.php/home/specialisty" target="_blank" rel="noreferrer">Все специалисты на сайте клиники <ArrowUpRight /></a>
       </section>
 
+      <ReviewsSection />
+
       <section id="prices" className="prices-section section container">
         <div className="prices-layout"><div className="prices-intro" data-reveal><span className="section-kicker">Стоимость консультаций</span><h2>Первый шаг.<br />Понятная цена.</h2><p>Выберите консультацию.<br />Полный перечень исследований и программ — в прайсе клиники.</p><a className="button button-outline" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a><span className="price-source">По открытому прайсу КСМ.<br />Актуальность уточните при записи.</span></div>
           <div className="price-panel" data-reveal><div className="price-filters" aria-label="Категории консультаций">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setPricesExpanded(false) }}>{item}</button>)}</div><ul id="consultation-prices" className={`price-list ${pricesExpanded ? 'is-expanded' : ''}`}>{visiblePrices.map((price, index) => <li className={index > 2 ? 'price-extra' : undefined} key={price.name}><div><h3>{price.name}</h3><p>{price.note}</p></div><span className="price-amount">{rubles(price.amount)}</span><a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a></li>)}</ul>{visiblePrices.length > 3 && <button type="button" className="price-expand button button-outline" aria-expanded={pricesExpanded} aria-controls="consultation-prices" onClick={() => setPricesExpanded(!pricesExpanded)}>{pricesExpanded ? 'Свернуть список' : 'Показать все консультации'}</button>}<p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
@@ -102,15 +106,16 @@ export default function App() {
       <StartSection />
       <AboutSection />
       <FaqSection />
+      <LocationSection />
 
       <section id="contact" className="contact-section container">
-        <div className="contact-slab"><div><span className="section-kicker">Будем рядом</span><h2>Давайте начнём<br />с разговора.</h2><p>Уточните подходящий приём и удобное время<br className="desktop-break" /> у администратора клиники.</p><a className="button button-primary" href={clinic.phoneHref}>Позвонить в клинику <ArrowUpRight /></a></div><div className="contact-details"><a className="contact-phone" href={clinic.phoneHref}>{clinic.phone}</a><p>{clinic.address}</p><dl><div><dt>Понедельник — пятница</dt><dd>08:00–16:00</dd></div><div><dt>Суббота</dt><dd>08:00–14:00</dd></div><div><dt>Воскресенье</dt><dd>Выходной</dd></div></dl><a className="text-link" href="https://yandex.ru/maps/?text=Казань%2C%20Зур%20Урам%2C%2033" target="_blank" rel="noreferrer">Открыть маршрут <ArrowUpRight /></a></div></div>
+        <div className="contact-slab"><div><span className="section-kicker">Будем рядом</span><h2>Давайте начнём<br />с разговора.</h2><p>Уточните подходящий приём и удобное время<br className="desktop-break" /> у администратора клиники.</p><a className="button button-primary" href={clinic.phoneHref}>Позвонить в клинику <ArrowUpRight /></a></div><div className="contact-details"><a className="contact-phone" href={clinic.phoneHref}>{clinic.phone}</a><p>{clinic.address}</p><dl><div><dt>Понедельник — пятница</dt><dd>08:00–16:00</dd></div><div><dt>Суббота</dt><dd>08:00–14:00</dd></div><div><dt>Воскресенье</dt><dd>Выходной</dd></div></dl><a className="text-link" href={yandexClinic.routeUrl} target="_blank" rel="noreferrer">Открыть маршрут <ArrowUpRight /></a></div></div>
       </section>
     </main>
     <footer className="footer container">
       <div className="footer-top"><a className="footer-title" href="#main">Клиника семейной медицины<span>Репродуктивное здоровье. Казань.</span></a><a className="text-link" href={clinic.website} target="_blank" rel="noreferrer">Действующий сайт <ArrowRight /></a></div>
       <nav className="footer-patient-links" aria-label="Информация пациентам"><a href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения и лицензия <ArrowUpRight /></a><a href={clinic.patientUrl} target="_blank" rel="noreferrer">Информация для потребителя <ArrowUpRight /></a><a href={clinic.preparationUrl} target="_blank" rel="noreferrer">Подготовка к исследованиям <ArrowUpRight /></a><a href="#faq">Вопросы и ответы <ArrowDown /></a></nav>
-      <div className="footer-bottom"><p>Имеются противопоказания.<br />Необходима консультация специалиста.</p><p>Презентационная концепция, не официальный сайт.<br />Сбор персональных данных не ведётся.</p><span>КСМ · Концепция 2026</span></div>
+      <div className="footer-bottom"><p>Имеются противопоказания.<br />Необходима консультация специалиста.</p><p>Презентационная концепция, не официальный сайт.<br />Форм сбора данных нет. Карта Яндекса включается по вашему выбору.</p><span>КСМ · Концепция 2026</span></div>
       <p className="footer-media-note">{media('hero').generated || media('oms').generated ? 'Предметные изображения — художественные визуализации, не фотографии клиники или пациентов. ' : ''}Фотографии специалистов и диагностического оборудования — из материалов действующего сайта КСМ. Информация и цены требуют подтверждения в клинике.</p>
     </footer>
   </div>

@@ -29,21 +29,24 @@ export default function DirectionFan() {
     let last = 0
     let direction = 0
     let accumulated = 0
-    let consumed = false
+    let blockedUntil = 0
     const wheel = (event: WheelEvent) => {
       // Never steal vertical page scrolling or a trackpad pinch-to-zoom.
       if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY) * 1.2 || !event.deltaX) return
       if (event.cancelable) event.preventDefault()
       const now = performance.now()
       const sign = Math.sign(event.deltaX)
-      if (now - last > 180 || sign !== direction) { accumulated = 0; consumed = false }
+      if (now - last > 180 || sign !== direction) { accumulated = 0; blockedUntil = 0 }
       last = now
       direction = sign
-      if (consumed) return
+      // Bound the lock to one card's settling time, not the entire wheel stream.
+      // Continued scrolling must work even when the pointer never moves.
+      if (now < blockedUntil) return
       accumulated += event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element.clientWidth : 1)
       if (Math.abs(accumulated) >= 36) {
         setSelected(index => (index + sign + count) % count)
-        consumed = true // The inertial tail belongs to this gesture, not another card.
+        accumulated = 0
+        blockedUntil = now + 520 // Discard the immediate tail, then allow sustained input again.
       }
     }
     element.addEventListener('wheel', wheel, { passive: false })
