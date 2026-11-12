@@ -77,6 +77,7 @@ svg { flex-shrink: 0; }
 .mobile-nav { margin-top: 12px; background: var(--surface); border-radius: 24px; padding: 16px 24px; box-shadow: var(--shadow-card); }
 .mobile-nav a { display: flex; align-items: center; justify-content: space-between; min-height: 54px; border-bottom: 1px solid var(--line); font-size: 16px; }
 .mobile-nav a:last-child { border: 0; }
+@media (min-width:951px) { .mobile-nav { display: none; } }
 
 /* Hero: one scientific image, one promise, no fabricated proof badges. */
 .hero { padding-top: 106px; }
@@ -196,6 +197,12 @@ svg { flex-shrink: 0; }
 .location-map-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 56px; padding-inline: 20px; font-size: 11px; }
 .location-map-toolbar .text-link { font-size: 11px; background: transparent; padding: 0; white-space: normal; }
 .location-map { display: block; border: 0; width: 100%; height: 420px; background: var(--surface-2); }
+.location-map-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 28px; text-align: center; height: auto; min-height: 420px; }
+.location-map-placeholder > svg { width: 32px; height: 32px; }
+.location-map-placeholder > p:first-of-type { font-weight: 650; }
+.location-map-placeholder > span { font-size: 13px; color: var(--muted); }
+.location-map-placeholder .location-map-privacy { margin: 0; }
+.location-map-placeholder .button { margin-top: 8px; white-space: normal; }
 .location-map-fallback { display: flex; justify-content: center; padding: 12px 20px; font-size: 11px; white-space: normal; }
 
 /* Price is a readable ledger, not another identical card grid. */
@@ -288,7 +295,7 @@ svg { flex-shrink: 0; }
 .faq-item summary { display: flex; align-items: center; gap: 20px; padding-block: 24px; min-height: 80px; list-style: none; cursor: pointer; }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-number { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.faq-item h3 { font-size: 17px; letter-spacing: -.025em; line-height: 1.5; font-weight: 550; }
+.faq-question { font-size: 17px; letter-spacing: -.025em; line-height: 1.5; font-weight: 550; }
 .faq-item summary > svg { width: 20px; height: 20px; margin-left: auto; transition: transform 180ms var(--ease); }
 .faq-item[open] summary > svg { transform: rotate(45deg); }
 .faq-answer { padding: 0 40px 28px 34px; }
@@ -326,7 +333,7 @@ svg { flex-shrink: 0; }
   .doctor-photo:hover img { transform: scale(1.03); }
   .direction-index button:hover:not([aria-pressed=true]),.price-filters button:hover:not([aria-pressed=true]) { background: var(--surface-2); }
   .region-options input:not(:checked) + span:hover { background: var(--accent-soft); color: var(--dark); }
-  .faq-item summary:hover h3,.footer-patient-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .faq-item summary:hover .faq-question,.footer-patient-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 }
 
 @media (min-width:1600px) { .hero-title { font-size: 76px; } }
@@ -411,6 +418,7 @@ svg { flex-shrink: 0; }
   .location-address { margin-top: 24px; gap: 12px; } .location-address p { font-size: 15px; }
   .location-actions { align-items: flex-start; flex-direction: column; gap: 12px; }
   .location-map-shell { border-radius: 24px; } .location-map { height: 360px; }
+  .location-map-placeholder { height: auto; min-height: 360px; }
   .prices-section { padding-bottom: 80px; } .price-panel { border-radius: 24px; padding: 20px; } .price-filters { gap: 4px; }
   .price-filters button { font-size: 9px; padding-inline: 10px; }
   .price-list li { flex-wrap: wrap; gap: 12px; } .price-list li > div { width: 100%; } .price-list h3 { font-size: 14px; }
@@ -439,7 +447,7 @@ svg { flex-shrink: 0; }
   .about-visual > img { aspect-ratio: 4/3; } .about-visual figcaption { padding: 20px; font-size: 13px; }
   .about-copy > p { font-size: 13px; }
   .about-facts > div { font-size: 11px; gap: 16px; } .about-facts { margin-top: 24px; }
-  .faq-item summary { padding-block: 20px; gap: 16px; } .faq-item h3 { font-size: 16px; }
+  .faq-item summary { padding-block: 20px; gap: 16px; } .faq-question { font-size: 16px; }
   .faq-answer { padding: 0 0 24px 30px; } .faq-answer p { font-size: 12px; }
   .footer-patient-links { flex-direction: column; align-items: flex-start; gap: 0; }
 }

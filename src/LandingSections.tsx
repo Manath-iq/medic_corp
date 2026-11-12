@@ -118,7 +118,7 @@ export function FaqSection() {
     <div className="faq-layout">
       <div className="faq-intro" data-reveal><span className="section-kicker">Перед первым визитом</span><h2 id="faq-title">Вопросы,<br />которые можно<br />задать заранее.</h2><p>Здесь — об организации приёма.<br />Медицинские вопросы обсудите с врачом.</p></div>
       <div className="faq-list">{questions.map((item, index) => <details className="faq-item" name="clinic-faq" key={item.id}>
-        <summary><span className="faq-number" aria-hidden="true">0{index + 1}</span><h3>{item.question}</h3><Plus aria-hidden="true" /></summary>
+        <summary><span className="faq-number" aria-hidden="true">0{index + 1}</span><span className="faq-question">{item.question}</span><Plus aria-hidden="true" /></summary>
         <div className="faq-answer"><p>{item.answer}</p><a className="text-link" href={item.href} {...(item.href.startsWith('https:') ? { target: '_blank', rel: 'noreferrer' } : {})}>{item.label}<ArrowUpRight /></a></div>
       </details>)}</div>
     </div>
