@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ArrowDown, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DirectionFan from './DirectionFan'
@@ -19,9 +19,19 @@ export default function App() {
   const mobileNav = useRef<HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [category, setCategory] = useState('Все консультации')
-  const [pricesExpanded, setPricesExpanded] = useState(false)
+  const [consultationIndex, setConsultationIndex] = useState(0)
+  const consultationTrack = useRef<HTMLUListElement>(null)
   const categories = ['Все консультации', ...new Set(prices.map(price => price.category))]
   const visiblePrices = prices.filter(price => category === 'Все консультации' || category === price.category)
+
+  function scrollConsultations(step: number) {
+    const track = consultationTrack.current
+    if (!track || track.children.length < 2) return
+    const cards = track.children as HTMLCollectionOf<HTMLElement>
+    const stride = cards[1].offsetLeft - cards[0].offsetLeft
+    const next = Math.max(0, Math.min(cards.length - 1, consultationIndex + step))
+    track.scrollTo({ left: next * stride })
+  }
 
   useEffect(() => {
     if (!menuOpen) return
@@ -131,7 +141,29 @@ export default function App() {
 
       <section id="prices" className="prices-section section container">
         <div className="prices-layout"><div className="prices-intro" data-reveal><span className="section-kicker">Стоимость консультаций</span><h2>Первый шаг.<br />Понятная цена.</h2><p>Выберите консультацию.<br />Полный перечень исследований и программ — в прайсе клиники.</p><a className="button button-outline" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a><span className="price-source">По открытому прайсу КСМ.<br />Актуальность уточните при записи.</span></div>
-          <div className="price-panel" data-reveal><div className="price-filters" aria-label="Категории консультаций">{categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setPricesExpanded(false) }}>{item}</button>)}</div><ul id="consultation-prices" className={`price-list ${pricesExpanded ? 'is-expanded' : ''}`}>{visiblePrices.map((price, index) => <li className={index > 2 ? 'price-extra' : undefined} key={price.name}><div><h3>{price.name}</h3><p>{price.note}</p></div><span className="price-amount">{rubles(price.amount)}</span><a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a></li>)}</ul>{visiblePrices.length > 3 && <button type="button" className="price-expand button button-outline" aria-expanded={pricesExpanded} aria-controls="consultation-prices" onClick={() => setPricesExpanded(!pricesExpanded)}>{pricesExpanded ? 'Свернуть список' : 'Показать все консультации'}</button>}<p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
+          <div className="price-panel" data-reveal>
+            <div className="price-filters" aria-label="Категории консультаций">
+              {categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { if (item !== category) { setCategory(item); setConsultationIndex(0) } }}>{item}</button>)}
+            </div>
+            <ul key={category} ref={consultationTrack} id="consultation-prices" className="price-list" onScroll={event => {
+              const track = event.currentTarget
+              const cards = track.children as HTMLCollectionOf<HTMLElement>
+              if (cards.length < 2) return
+              const stride = cards[1].offsetLeft - cards[0].offsetLeft
+              setConsultationIndex(Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / stride))))
+            }}>
+              {visiblePrices.map(price => <li key={price.name}>
+                <div><h3>{price.name}</h3><p>{price.note}</p></div>
+                <span className="price-amount">{rubles(price.amount)}</span>
+                <a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a>
+              </li>)}
+            </ul>
+            {visiblePrices.length > 1 && <div className="review-controls">
+              <span aria-live="polite">{consultationIndex + 1} из {visiblePrices.length}</span>
+              <button type="button" disabled={consultationIndex === 0} aria-label="Предыдущая консультация" onClick={() => scrollConsultations(-1)}><ArrowLeft /></button>
+              <button type="button" disabled={consultationIndex === visiblePrices.length - 1} aria-label="Следующая консультация" onClick={() => scrollConsultations(1)}><ArrowRight /></button>
+            </div>}
+            <p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
         </div>
       </section>
 

@@ -28,14 +28,14 @@ for (const name of names) {
       const wheel = async (x, y) => width === 390 && name === 'webkit'
         ? stage.dispatchEvent('wheel', { deltaX: x, deltaY: y, bubbles: true, cancelable: true })
         : page.mouse.wheel(x, y)
-      const selected = () => page.locator('.direction-card').evaluateAll(cards => cards.findIndex(card => card.classList.contains('is-current')))
+      const selected = () => page.locator('.direction-picker select').evaluate(select => select.selectedIndex)
       const settle = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
       const choose = async index => {
         if (await page.locator('.direction-picker').isVisible()) await page.locator('.direction-picker select').selectOption({ index })
         else await page.locator('.direction-index button').nth(index).click()
         await stage.scrollIntoViewIfNeeded()
       }
-      const point = async index => page.locator('.direction-card').nth(index).evaluate(card => {
+      const point = async index => page.locator(`.direction-card[data-direction-index="${index}"][aria-hidden="false"]`).evaluate(card => {
         const rect = card.getBoundingClientRect()
         // Actual hit testing: choose an exposed part, not an overlapping card's bounding box.
         for (let y = Math.max(100, rect.top + 90); y < Math.min(innerHeight - 20, rect.bottom - 40); y += 12) {

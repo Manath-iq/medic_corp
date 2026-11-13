@@ -114,11 +114,11 @@ svg { flex-shrink: 0; }
 .fan-stage.is-dragging { cursor: grabbing; }
 .fan-list { position: relative; height: 100%; }
 .direction-card { position: absolute; top: 16px; left: 50%; width: clamp(260px,26vw,340px); height: 430px; overflow: hidden; border-radius: var(--r-card); background: var(--ink); box-shadow: var(--shadow-card); user-select: none; -webkit-user-select: none; transform-origin: 50% 130%; transform: translateX(calc(-50% + var(--card-x))) translateY(var(--card-y)) rotate(var(--card-rotate)) scale(var(--card-scale)); transition: transform 520ms var(--ease),opacity 200ms var(--ease); }
-.direction-card[aria-hidden=true] { opacity: 0; pointer-events: none; }
+.direction-card[aria-hidden=true] { pointer-events: none; }
 .is-dragging .direction-card { transition-duration: 0ms; }
 .direction-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .direction-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg,var(--photo-shade) 0%,var(--photo-shade) 35%,transparent 75%); pointer-events: none; }
-.direction-card:nth-child(2) img,.direction-card:nth-child(6) img { object-position: center 28%; }
+.direction-card[data-direction-index="1"] img,.direction-card[data-direction-index="5"] img { object-position: center 28%; }
 .direction-label { position: absolute; top: 16px; left: 16px; z-index: 2; padding: 8px 12px; background: var(--label-glass); border-radius: 9px; font-size: 11px; font-weight: 600; max-width: calc(100% - 80px); line-height: 1.4; }
 .direction-select { position: absolute; z-index: 3; top: 16px; right: 16px; width: 40px; height: 40px; background: var(--surface); border-radius: 50%; display: grid; place-items: center; }
 .direction-select svg { width: 20px; height: 20px; }
@@ -207,17 +207,25 @@ svg { flex-shrink: 0; }
 .prices-intro { align-self: center; }
 .prices-intro > p { color: var(--muted); font-size: 14px; max-width: 36ch; margin-block: 24px 28px; }
 .price-source { display: block; font-size: 10px; color: var(--muted); margin-top: 32px; }
-.price-panel { background: var(--surface); border-radius: var(--r-slab); padding: 32px; }
+.price-panel { min-width: 0; background: var(--surface); border-radius: var(--r-slab); padding: 32px; }
 .price-filters { display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
 .price-filters button { background: transparent; font-size: 10px; padding: 10px 12px; min-height: 44px; border-radius: 999px; white-space: nowrap; }
 .price-filters button[aria-pressed=true] { background: var(--ink); color: var(--on-dark); }
-.price-list li { display: flex; align-items: center; gap: 16px; padding-block: 24px; border-bottom: 1px solid var(--line); }
-.price-list h3 { font-size: 14px; letter-spacing: -.015em; font-weight: 600; line-height: 1.5; }
-.price-list p { font-size: 10px; color: var(--muted); margin-top: 6px; }
-.price-amount { white-space: nowrap; margin-left: auto; font-size: 20px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-.price-action { width: 36px; height: 36px; background: var(--bg); flex: none; }
+.price-list { --peek: clamp(24px, 4vw, 48px); margin-top: 16px; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+@media (prefers-reduced-motion: no-preference) { .price-list { scroll-behavior: smooth; } }
+.price-panel .review-controls span { margin-right: auto; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.price-panel .review-controls button:disabled { opacity: .35; cursor: default; }
+.price-panel .review-controls { align-items: center; justify-content: flex-end; margin-top: 12px; }
+.price-list li { flex: 0 0 calc(100% - var(--peek)); min-width: 0; scroll-snap-align: center; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; padding: clamp(16px, 2vw, 24px); border-radius: 18px; background: var(--bg); }
+.price-list li:first-child { margin-left: calc(var(--peek) / 2); }
+.price-list li:last-child { margin-right: calc(var(--peek) / 2); }
+.price-list li:only-child { flex-basis: 100%; margin-inline: 0; }
+.price-list li > div { grid-column: 1 / -1; align-self: start; }
+.price-list h3 { font-size: 18px; letter-spacing: -.02em; line-height: 1.3; }
+.price-list p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.price-amount { white-space: nowrap; font-size: 22px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.price-action { width: 44px; height: 44px; background: var(--surface); }
 .price-panel-note { font-size: 10px; color: var(--muted); margin-top: 24px; max-width: 58ch; }
-.price-expand { display: none; }
 
 /* OMS: two genuine regional routes, not a promise of a funded place. */
 .oms-slab { background: var(--dark); color: var(--on-dark); border-radius: var(--r-slab); padding: 64px; }
@@ -403,10 +411,6 @@ svg { flex-shrink: 0; }
   .location-map-placeholder { height: auto; min-height: 360px; }
   .prices-section { padding-bottom: 80px; } .price-panel { border-radius: 24px; padding: 20px; } .price-filters { gap: 4px; }
   .price-filters button { font-size: 9px; padding-inline: 10px; }
-  .price-list li { flex-wrap: wrap; gap: 12px; } .price-list li > div { width: 100%; } .price-list h3 { font-size: 14px; }
-  .price-list:not(.is-expanded) .price-extra { display: none; }
-  .price-expand { display: inline-flex; width: 100%; margin-top: 24px; font-size: 12px; white-space: normal; }
-  .price-amount { margin-left: 0; margin-right: auto; font-size: 22px; } .price-action { width: 44px; height: 44px; }
   .contact-slab { grid-template-columns: 1fr; gap: 48px; padding: 32px 24px; border-radius: 24px; }
   .contact-slab h2 { font-size: 42px; } .contact-phone { font-size: 29px; }
   .contact-details dl { font-size: 12px; } .contact-slab p { font-size: 12px; }
