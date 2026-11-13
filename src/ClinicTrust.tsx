@@ -1,31 +1,39 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { ArrowUpRight, MapPin, NavigationArrow, Star } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, MapPin, NavigationArrow, Star } from '@phosphor-icons/react'
 import { clinic } from './data'
 import { yandexClinic, yandexReviews } from './yandex'
 
 export function ReviewsSection() {
+  const track = useRef<HTMLDivElement>(null)
+  function move(step: number) {
+    const el = track.current
+    if (!el || el.children.length < 2) return
+    const cards = el.children as HTMLCollectionOf<HTMLElement>
+    const stride = cards[1].offsetLeft - cards[0].offsetLeft
+    const end = el.scrollWidth - el.clientWidth
+    let left = (Math.round(el.scrollLeft / stride) + step) * stride
+    if (step > 0 && el.scrollLeft >= end - 1) left = 0
+    if (step < 0 && el.scrollLeft <= 1) left = end
+    el.scrollTo({ left })
+  }
   return <section id="reviews" className="reviews-section section container" aria-labelledby="reviews-title">
-    <div className="section-heading" data-reveal>
-      <div><span className="section-kicker">Опыт посещения</span><h2 id="reviews-title">Что говорят<br />о клинике.</h2></div>
-      <a className="text-link" href={yandexClinic.reviewsUrl} target="_blank" rel="noreferrer">Все отзывы на Яндекс Картах <ArrowUpRight /></a>
+    <div className="reviews-heading">
+      <h2 id="reviews-title">Отзывы</h2>
+      <div className="review-controls">
+        <button type="button" aria-label="Предыдущий отзыв" onClick={() => move(-1)}><ArrowLeft /></button>
+        <button type="button" aria-label="Следующий отзыв" onClick={() => move(1)}><ArrowRight /></button>
+      </div>
     </div>
-    <div className="reviews-layout" data-reveal>
-      <aside className="reviews-rating" aria-label="Рейтинг клиники на Яндекс Картах">
-        <span className="reviews-platform">Яндекс Карты</span>
-        <p className="reviews-rating-value">{yandexClinic.rating}<span>из 5</span><Star weight="fill" aria-hidden="true" /></p>
-        <p className="reviews-counts">{yandexClinic.ratings} оценок<span>{yandexClinic.reviews} отзыва</span></p>
-        <p className="reviews-snapshot">По данным Яндекса<br />на <time dateTime={yandexClinic.checkedAt}>{yandexClinic.checkedLabel}</time></p>
-      </aside>
-      <ul className="review-grid">{yandexReviews.map(review => <li className="review-card" key={review.author}>
-        <figure>
-          <figcaption><cite>{review.author}</cite><span>{'date' in review ? <time dateTime={review.date}>{review.dateLabel}</time> : review.dateLabel}</span></figcaption>
-          <blockquote><p>«{review.quote}»</p></blockquote>
-          <a className="text-link" href={yandexClinic.reviewsUrl} target="_blank" rel="noreferrer" aria-label={`${review.author}: ${review.excerpt ? 'полный отзыв' : 'отзыв'} на Яндекс Картах`}>{review.excerpt ? 'Полный отзыв' : 'На Яндекс Картах'} <ArrowUpRight /></a>
-          {review.excerpt && <span className="review-excerpt">Фрагмент отзыва</span>}
-        </figure>
-      </li>)}</ul>
+    <div className="review-track" ref={track}>
+      {yandexReviews.map(review => <figure className="review-slide" key={review.author}>
+        <div className="review-stars" role="img" aria-label={`Оценка ${review.rating} из 5`}>
+          {[1, 2, 3, 4, 5].map(value => <Star key={value} weight={value <= review.rating ? 'fill' : 'regular'} aria-hidden="true" />)}
+        </div>
+        <blockquote>«{review.quote}»</blockquote>
+        <figcaption><strong>{review.author}</strong><span>{review.dateLabel}{review.excerpt && ' · Фрагмент отзыва'}</span></figcaption>
+      </figure>)}
     </div>
-    <p className="reviews-disclaimer">Выбранные отзывы с Яндекс Карт. Тексты сохранены в авторской редакции; рейтинг и количество оценок могут измениться.</p>
+    <a className="text-link" href={yandexClinic.reviewsUrl} target="_blank" rel="noreferrer">Все отзывы на Яндекс Картах <ArrowUpRight /></a>
   </section>
 }
 
