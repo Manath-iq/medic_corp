@@ -24,11 +24,11 @@ export function ReviewsSection() {
         <button type="button" aria-label="Следующий отзыв" onClick={() => move(1)}><ArrowRight /></button>
       </div>
     </div>
-    <div className="review-track" ref={track}>
+    <div className="review-track" ref={track} tabIndex={0} role="region" aria-label="Отзывы пациентов">
       {yandexReviews.map(review => <figure className="review-slide" key={review.author}>
-        <div className="review-stars" role="img" aria-label={`Оценка ${review.rating} из 5`}>
+        {review.rating && <div className="review-stars" role="img" aria-label={`Оценка ${review.rating} из 5`}>
           {[1, 2, 3, 4, 5].map(value => <Star key={value} weight={value <= review.rating ? 'fill' : 'regular'} aria-hidden="true" />)}
-        </div>
+        </div>}
         <blockquote>«{review.quote}»</blockquote>
         <figcaption><strong>{review.author}</strong><span>{review.dateLabel}{review.excerpt && ' · Фрагмент отзыва'}</span></figcaption>
       </figure>)}
@@ -44,12 +44,10 @@ export function LocationSection() {
   return <section id="location" className="location-section section container" aria-labelledby="location-title">
     <div className="location-layout" data-reveal>
       <div className="location-copy">
-        <span className="section-kicker">Встретимся в Казани</span>
         <h2 id="location-title">Как добраться<br />до клиники.</h2>
         <div className="location-address"><MapPin aria-hidden="true" /><div><p>{clinic.address}</p><span>На Яндекс Картах — {yandexClinic.mapAddress}.</span></div></div>
-        <p className="location-help">Перед первым визитом уточните у администратора, как найти вход и что взять с собой.</p>
+        <p className="location-help">Пн–пт 08:00–16:00 · Сб 08:00–14:00 · Вс выходной</p>
         <div className="location-actions"><a className="button button-primary" href={yandexClinic.routeUrl} target="_blank" rel="noreferrer">Построить маршрут <NavigationArrow /></a><a className="text-link" href={clinic.phoneHref}>Позвонить в клинику <ArrowUpRight /></a></div>
-        <p className="location-service-note">Маршрут откроется в Яндекс Картах. Начальную точку можно выбрать там.</p>
       </div>
       <div className="location-map-shell">
         {mapEnabled ? <iframe
@@ -63,7 +61,7 @@ export function LocationSection() {
           <MapPin aria-hidden="true" />
           <p>Клиника семейной медицины</p>
           <span>{yandexClinic.mapAddress}</span>
-          <p id="map-privacy" className="location-map-privacy">При включении карты браузер подключится к Яндексу. До этого карта не загружается.</p>
+          <p id="map-privacy" className="location-map-privacy">При включении карты браузер подключится к Яндексу.</p>
           <button type="button" className="button button-primary" aria-describedby="map-privacy" onClick={() => setMapEnabled(true)}>Показать карту Яндекса</button>
         </div>}
         <a className="location-map-fallback text-link" href={yandexClinic.url} target="_blank" rel="noreferrer">Открыть клинику на Яндекс Картах <ArrowUpRight /></a>

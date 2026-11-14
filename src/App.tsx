@@ -1,38 +1,23 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
+import { ArrowDown, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DirectionFan from './DirectionFan'
 import { LocationSection, ReviewsSection } from './ClinicTrust'
-import { AboutSection, FaqSection, OmsSection, StartSection } from './LandingSections'
+import { FaqSection } from './LandingSections'
 import { asset, clinic, prices, rubles, specialists } from './data'
 import { media } from './media'
-import { yandexClinic } from './yandex'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const nav = [['#directions', 'Направления'], ['#doctors', 'Специалисты'], ['#prices', 'Стоимость'], ['#oms', 'ЭКО по ОМС'], ['#contact', 'Контакты']]
+const newsUrl = 'https://ksm-eko.ru/index.php/novosti-i-akcii'
+const nav = [['#offers', 'Акции'], ['#directions', 'Услуги'], ['#prices', 'Цены'], ['#doctors', 'Специалисты'], ['#location', 'Контакты']]
 
 export default function App() {
   const root = useRef<HTMLDivElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)
   const mobileNav = useRef<HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [category, setCategory] = useState('Все консультации')
-  const [consultationIndex, setConsultationIndex] = useState(0)
-  const consultationTrack = useRef<HTMLUListElement>(null)
-  const categories = ['Все консультации', ...new Set(prices.map(price => price.category))]
-  const visiblePrices = prices.filter(price => category === 'Все консультации' || category === price.category)
-
-  function scrollConsultations(step: number) {
-    const track = consultationTrack.current
-    if (!track || track.children.length < 2) return
-    const cards = track.children as HTMLCollectionOf<HTMLElement>
-    const stride = cards[1].offsetLeft - cards[0].offsetLeft
-    const next = Math.max(0, Math.min(cards.length - 1, consultationIndex + step))
-    track.scrollTo({ left: next * stride })
-  }
-
   useEffect(() => {
     if (!menuOpen) return
     const desktop = window.matchMedia('(min-width: 951px)')
@@ -63,21 +48,14 @@ export default function App() {
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const context = gsap.context(() => {
-        const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        timeline.from('.hero-context', { y: 12, opacity: 0, duration: 0.5 })
-          .from('.hero-title', { y: 24, opacity: 0, duration: 0.8 }, '-=0.28')
-          .from('.hero-support', { y: 16, opacity: 0, duration: 0.6 }, '-=0.5')
-          .from('.hero-visual', { y: 24, opacity: 0, duration: 0.8 }, '-=0.65')
         gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach(element => {
           gsap.from(element, { y: 18, opacity: 0, duration: 0.65, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 93%', once: true } })
         })
+        gsap.from('.trust-facts li', {
+          y: 12, opacity: 0.35, duration: 0.38, stagger: 0.055, ease: 'power3.out',
+          scrollTrigger: { trigger: '.trust-facts', start: 'top 92%', once: true },
+        })
         gsap.to('.hero-image', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
-      }, root)
-      return () => context.revert()
-    })
-    media.add('(prefers-reduced-motion: no-preference) and (min-width: 701px)', () => {
-      const context = gsap.context(() => {
-        gsap.fromTo('.statement-word', { opacity: 0.26 }, { opacity: 1, stagger: 0.12, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top 75%', end: 'bottom 60%', scrub: true } })
       }, root)
       return () => context.revert()
     })
@@ -96,7 +74,7 @@ export default function App() {
     <header className="site-header">
       <div className="nav-bar">
         <a href="#main" className="brand" aria-label="Клиника семейной медицины, на главную">
-          <span className="brand-symbol"><img src={asset('logo.png')} alt="КСМ" width={550} height={550} /></span>
+          <span className="brand-symbol"><img src={asset('logo-small.webp')} alt="КСМ" width={156} height={156} /></span>
           <span>Клиника<br />семейной медицины</span>
         </a>
         <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</nav>
@@ -119,69 +97,89 @@ export default function App() {
             <div className="hero-support"><p className="hero-lead"><span className="desktop-copy">Диагностика, лечение бесплодия и ЭКО.<br className="desktop-break" /> Рядом, чтобы помочь вам найти свой путь.</span><span className="mobile-copy">Репродуктологи, гинекологи и эмбриологи в Казани.</span></p><div className="hero-actions"><a href="#contact" className="button button-primary">Обсудить первый приём <ArrowUpRight /></a><a href="#directions" className="hero-secondary">Направления <ArrowDown /></a></div></div>
             <div className="hero-location"><span>Клиника семейной медицины</span><span>Казань, Зур Урам, 33</span></div>
           </div>
-          <figure className="hero-visual"><img className="hero-image" src={media('hero').src} alt={media('hero').generated ? 'Художественная визуализация лабораторного натюрморта на тему эмбриологии' : 'Эмбриологическая работа под микроскопом — фотография из материалов клиники'} width={1140} height={648} fetchPriority="high" /><div className="hero-visual-shade" /><figcaption><span>Здесь зарождается жизнь</span><span className="hero-visual-note">{media('hero').generated ? 'Художественная визуализация' : 'Эмбриология и репродуктивные технологии'}</span></figcaption><span className="hero-image-index" aria-hidden="true">КСМ / КАЗАНЬ</span></figure>
+          <figure className="hero-visual"><img className="hero-image" src={media('hero').src} alt={media('hero').generated ? 'Художественная визуализация лабораторного натюрморта на тему эмбриологии' : 'Эмбриологическая работа под микроскопом — фотография из материалов клиники'} width={1140} height={648} fetchPriority="high" /><div className="hero-visual-shade" /><figcaption><span>Здесь зарождается жизнь</span></figcaption></figure>
         </div>
-        <div className="hero-bottom"><span className="concept-label">Концепция нового сайта <span>·</span> Предварительный просмотр</span><a href="#directions">Давайте начнём знакомство <ArrowDown /></a></div>
+      </section>
+
+      <section id="offers" className="container offers-section">
+        <div className="offers-strip">
+          <h2>Акции и скидки</h2>
+          <a className="button button-outline" href={clinic.phoneHref}>Уточнить скидки <Phone /></a>
+        </div>
       </section>
 
       <DirectionFan />
 
-      <section className="statement section container" aria-label="Первый шаг">
-        <p className="statement-text">{'Не обязательно знать все ответы, чтобы прийти на первую консультацию.'.split(' ').map((word, index) => <span className="statement-word" key={index}>{word} </span>)}</p>
-        <div className="statement-bottom"><span className="signal-dot" /><p>Начните с разговора.<br />С выбором специалиста поможет регистратура.</p><a className="text-link" href="#contact">Сделать первый шаг <ArrowUpRight /></a></div>
+      <section id="prices" className="container compact-prices">
+        <div className="compact-heading"><h2>Цены на консультации</h2><a className="text-link" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a></div>
+        <ul className="consultations">{prices.map(price => <li key={price.name}>
+          <h3>{price.name}</h3><p>{price.note}</p><strong>{rubles(price.amount)}</strong>
+        </li>)}</ul>
       </section>
 
-      <section id="doctors" className="doctors-section section container">
-        <div className="section-heading" data-reveal><h2><span className="desktop-copy">За каждым решением —<br />конкретный человек.</span><span className="mobile-copy">Специалисты<br />клиники.</span></h2><p className="desktop-copy">Специалисты по репродуктивному здоровью<br className="desktop-break" /> и эмбриологии. Познакомьтесь ближе.</p></div>
-        <ul className="doctor-grid">{specialists.map((doctor, index) => <li key={doctor.name} className="doctor-card" data-reveal><a className="doctor-photo" href={doctor.url} target="_blank" rel="noreferrer" aria-label={`${doctor.name} ${doctor.given}: сведения на сайте клиники`}><img src={asset(doctor.image)} alt={`${doctor.name} ${doctor.given}`} width={450} height={675} loading="lazy" /><span className="doctor-number">0{index + 1}</span><span className="doctor-open"><ArrowUpRight /></span></a><h3>{doctor.name}<span>{doctor.given}</span></h3><p className="doctor-role">{doctor.role}</p><p className="doctor-detail">{doctor.detail}</p></li>)}</ul>
-        <a className="text-link all-specialists" href="https://ksm-eko.ru/index.php/home/specialisty" target="_blank" rel="noreferrer">Все специалисты на сайте клиники <ArrowUpRight /></a>
-      </section>
-
-      <ReviewsSection />
-
-      <section id="prices" className="prices-section section container">
-        <div className="prices-layout"><div className="prices-intro" data-reveal><span className="section-kicker">Стоимость консультаций</span><h2>Первый шаг.<br />Понятная цена.</h2><p>Выберите консультацию.<br />Полный перечень исследований и программ — в прайсе клиники.</p><a className="button button-outline" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a><span className="price-source">По открытому прайсу КСМ.<br />Актуальность уточните при записи.</span></div>
-          <div className="price-panel" data-reveal>
-            <div className="price-filters" aria-label="Категории консультаций">
-              {categories.map(item => <button key={item} aria-pressed={category === item} onClick={() => { if (item !== category) { setCategory(item); setConsultationIndex(0) } }}>{item}</button>)}
-            </div>
-            <ul key={category} ref={consultationTrack} id="consultation-prices" className="price-list" onScroll={event => {
-              const track = event.currentTarget
-              const cards = track.children as HTMLCollectionOf<HTMLElement>
-              if (cards.length < 2) return
-              const stride = cards[1].offsetLeft - cards[0].offsetLeft
-              setConsultationIndex(Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / stride))))
-            }}>
-              {visiblePrices.map(price => <li key={price.name}>
-                <div><h3>{price.name}</h3><p>{price.note}</p></div>
-                <span className="price-amount">{rubles(price.amount)}</span>
-                <a href="#contact" className="price-action icon-button" aria-label={`${price.name}: уточнить запись`}><ArrowUpRight /></a>
-              </li>)}
-            </ul>
-            {visiblePrices.length > 1 && <div className="review-controls">
-              <span aria-live="polite">{consultationIndex + 1} из {visiblePrices.length}</span>
-              <button type="button" disabled={consultationIndex === 0} aria-label="Предыдущая консультация" onClick={() => scrollConsultations(-1)}><ArrowLeft /></button>
-              <button type="button" disabled={consultationIndex === visiblePrices.length - 1} aria-label="Следующая консультация" onClick={() => scrollConsultations(1)}><ArrowRight /></button>
-            </div>}
-            <p className="price-panel-note">Стоимость указана для консультаций. Дополнительные исследования оплачиваются по действующему прайсу.</p></div>
+      <section id="about" className="trust-band">
+        <div className="container">
+          <h2>Почему нам доверяют</h2>
+          <ul className="trust-facts">
+            <li><h3>Команда</h3><p>Репродуктологи и эмбриологи ведут приём в одной клинике.</p></li>
+            <li><h3>Диагностика</h3><p>В клинике проводят УЗИ и лабораторные исследования.</p></li>
+            <li><h3>ЭКО по ОМС</h3><a className="text-link" href={clinic.omsUrl} target="_blank" rel="noreferrer">Условия программы <ArrowUpRight /></a></li>
+          </ul>
         </div>
       </section>
 
-      <OmsSection />
-      <StartSection />
-      <AboutSection />
+      <section id="doctors" className="doctors-section section container">
+        <div className="section-heading" data-reveal><h2><span className="desktop-copy">За каждым решением —<br />конкретный человек.</span><span className="mobile-copy">Специалисты<br />клиники.</span></h2><p className="desktop-copy">Специалисты по репродуктивному здоровью<br className="desktop-break" /> и эмбриологии.</p></div>
+        <ul className="doctor-grid">{specialists.map(doctor => <li key={doctor.name} className="doctor-card" data-reveal><a className="doctor-photo" href={doctor.url} target="_blank" rel="noreferrer" aria-label={`${doctor.name} ${doctor.given}: сведения на сайте клиники`}><img src={asset(doctor.image)} alt={`${doctor.name} ${doctor.given}`} width={450} height={675} loading="lazy" /><span className="doctor-open"><ArrowUpRight /></span></a><h3>{doctor.name}<span>{doctor.given}</span></h3><p className="doctor-role">{doctor.role}</p><p className="doctor-detail">{doctor.detail}</p></li>)}</ul>
+        <a className="text-link all-specialists" href="https://ksm-eko.ru/index.php/home/specialisty" target="_blank" rel="noreferrer">Все специалисты на сайте клиники <ArrowUpRight /></a>
+      </section>
+
+      <section id="contact" className="container">
+        <div className="booking-strip">
+          <div><h2>Записаться на приём</h2><p>С выбором специалиста поможет регистратура.</p></div>
+          <a className="button" href={clinic.phoneHref}><Phone /> {clinic.phone}</a>
+        </div>
+      </section>
+      <ReviewsSection />
       <FaqSection />
       <LocationSection />
-
-      <section id="contact" className="contact-section container">
-        <div className="contact-slab"><div><span className="section-kicker">Будем рядом</span><h2>Давайте начнём<br />с разговора.</h2><p>Уточните подходящий приём и удобное время<br className="desktop-break" /> у администратора клиники.</p><a className="button button-primary" href={clinic.phoneHref}>Позвонить в клинику <ArrowUpRight /></a></div><div className="contact-details"><a className="contact-phone" href={clinic.phoneHref}>{clinic.phone}</a><p>{clinic.address}</p><dl><div><dt>Понедельник — пятница</dt><dd>08:00–16:00</dd></div><div><dt>Суббота</dt><dd>08:00–14:00</dd></div><div><dt>Воскресенье</dt><dd>Выходной</dd></div></dl><a className="text-link" href={yandexClinic.routeUrl} target="_blank" rel="noreferrer">Открыть маршрут <ArrowUpRight /></a></div></div>
+      <section id="news" className="news-section">
+        <div className="container">
+          <div className="compact-heading"><h2>Новости</h2><a className="text-link" href={newsUrl} target="_blank" rel="noreferrer">Все новости <ArrowUpRight /></a></div>
+          <div className="news-grid">
+            <a className="news-item" href={newsUrl + '/priglashaem-stat-donorami-ootsitov'} target="_blank" rel="noreferrer"><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
+            <a className="news-item" href={clinic.firstVisitUrl} target="_blank" rel="noreferrer"><small>Первый приём</small><span>Как проходит первое знакомство с репродуктологом <ArrowUpRight /></span></a>
+            <a className="news-item" href={clinic.preparationUrl} target="_blank" rel="noreferrer"><small>Подготовка к обследованиям</small><span>Памятка перед визитом на обследование <ArrowUpRight /></span></a>
+          </div>
+        </div>
       </section>
     </main>
-    <footer className="footer container">
-      <div className="footer-top"><a className="footer-title" href="#main">Клиника семейной медицины<span>Репродуктивное здоровье. Казань.</span></a><a className="text-link" href={clinic.website} target="_blank" rel="noreferrer">Действующий сайт <ArrowRight /></a></div>
-      <nav className="footer-patient-links" aria-label="Информация пациентам"><a href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения и лицензия <ArrowUpRight /></a><a href={clinic.patientUrl} target="_blank" rel="noreferrer">Информация для потребителя <ArrowUpRight /></a><a href={clinic.preparationUrl} target="_blank" rel="noreferrer">Подготовка к исследованиям <ArrowUpRight /></a><a href="#faq">Вопросы и ответы <ArrowDown /></a></nav>
-      <div className="footer-bottom"><p>Имеются противопоказания.<br />Необходима консультация специалиста.</p><p>Презентационная концепция, не официальный сайт.<br />Форм сбора данных нет. Карта Яндекса включается по вашему выбору.</p><span>КСМ · Концепция 2026</span></div>
-      <p className="footer-media-note">{media('hero').generated || media('oms').generated ? 'Предметные изображения — художественные визуализации, не фотографии клиники или пациентов. ' : ''}Фотографии специалистов и диагностического оборудования — из материалов действующего сайта КСМ. Информация и цены требуют подтверждения в клинике.</p>
+    <footer id="footer" className="footer">
+      <div className="container">
+        <a className="footer-home" href="#main" aria-label="Клиника семейной медицины, наверх">
+          <img src={asset('logo-small.webp')} width="52" height="52" alt="" />
+          <span>Клиника<br />семейной медицины</span>
+        </a>
+        <div className="footer-directory">
+          <div className="footer-contacts">
+            <h2>Регистратура</h2>
+            <a className="footer-phone" href={clinic.phoneHref}>{clinic.phone}</a>
+            <a className="text-link" href="#location">{clinic.address} <ArrowUpRight /></a>
+          </div>
+          <nav className="footer-patient-links" aria-label="Информация пациентам">
+            <h2>Пациентам</h2>
+            <a href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения и лицензия <ArrowUpRight /></a>
+            <a href={clinic.patientUrl} target="_blank" rel="noreferrer">Информация для потребителя <ArrowUpRight /></a>
+            <a href={clinic.preparationUrl} target="_blank" rel="noreferrer">Подготовка к исследованиям <ArrowUpRight /></a>
+            <a href="#faq">Вопросы и ответы <ArrowUpRight /></a>
+            <a href={clinic.website} target="_blank" rel="noreferrer">ksm-eko.ru <ArrowRight /></a>
+          </nav>
+        </div>
+        <div className="footer-bottom">
+          <p>Имеются противопоказания.<br />Необходима консультация специалиста.</p>
+          <span>КСМ · 2026</span>
+        </div>
+      </div>
     </footer>
   </div>
 }

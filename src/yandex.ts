@@ -22,6 +22,13 @@ export const yandexClinic = {
 
 export const yandexReviews = [
   {
+    author: 'Татьяна Хайруллина',
+    dateLabel: '30 августа 2024',
+    rating: null,
+    excerpt: false,
+    quote: 'Вежливый персонал, прекрасные врачи',
+  },
+  {
     author: 'матвей пронин',
     dateLabel: '8 мая 2026',
     rating: 5,

@@ -139,7 +139,7 @@ export default function DirectionFan() {
             zIndex: 100 - Math.round(absolute * 10),
           } as CSSProperties
           return <li key={slot} data-direction-index={index} className={`direction-card ${slot === center ? 'is-current' : ''}`} style={cardStyle} aria-hidden={absolute > 2.5}>
-            <img src={media(direction.id as MediaSlot).src} alt="" width={450} height={675} loading="lazy" draggable={false} />
+            <img src={media(direction.id as MediaSlot).src} alt="" width={450} height={675} loading="lazy" fetchPriority="low" draggable={false} />
             <span className="direction-label">{direction.name}</span>
             <span className="direction-select" aria-hidden="true"><ArrowUpRight /></span>
             <div className="direction-card-bottom"><span>{direction.tag}</span><p>{direction.note}</p></div>
@@ -150,11 +150,10 @@ export default function DirectionFan() {
     </div>
 
     <div className="container">
-      <p className="fan-hint">Нажмите на карточку или листайте в сторону</p>
       <label className="direction-picker">Выберите направление<select value={selected} onChange={event => choose(Number(event.target.value))}>{directions.map((direction, index) => <option key={direction.id} value={index}>{direction.name}</option>)}</select></label>
       <div className="direction-detail" aria-live="polite" aria-atomic="true">
-        <div><span className="mini-label">Выбранное направление</span><h3>{current.name}</h3></div>
-        <p>{current.detail}</p>
+        <h3>{current.name}</h3>
+        <p key={current.id}>{current.detail}</p>
         <a className="text-link" href="#contact">Уточнить приём <ArrowUpRight /></a>
       </div>
       <div className="direction-index" aria-label="Выбор направления">

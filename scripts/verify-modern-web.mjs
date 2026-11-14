@@ -70,11 +70,11 @@ try {
       await page.setViewportSize({ width, height: 900 })
       assert.equal(await toggle.getAttribute('aria-expanded'), 'false')
       await toggle.click()
-      await page.locator('#mobile-nav a[href="#oms"]').focus()
+      await page.locator('#mobile-nav a[href="#prices"]').focus()
       await page.keyboard.press('Enter')
       assert.equal(await page.locator('#mobile-nav').count(), 0)
-      assert.equal(await page.locator('#oms').evaluate(node => node === document.activeElement), true)
-      assert.equal(new URL(page.url()).hash, '#oms')
+      assert.equal(await page.locator('#prices').evaluate(node => node === document.activeElement), true)
+      assert.equal(new URL(page.url()).hash, '#prices')
     }
 
     await page.locator('#location').scrollIntoViewIfNeeded()
