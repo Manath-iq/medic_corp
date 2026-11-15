@@ -24,7 +24,7 @@ export const yandexReviews = [
   {
     author: 'Татьяна Хайруллина',
     dateLabel: '30 августа 2024',
-    rating: null,
+    rating: 5,
     excerpt: false,
     quote: 'Вежливый персонал, прекрасные врачи',
   },

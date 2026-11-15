@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ArrowDown, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
+import { UsersThree, Microscope, IdentificationCard, ArrowRight, ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DirectionFan from './DirectionFan'
@@ -94,7 +94,7 @@ export default function App() {
           <div className="hero-copy">
             <p className="hero-context"><span className="signal-dot" />Репродуктивное здоровье · Казань</p>
             <h1 id="hero-title" className="hero-title"><span className="desktop-copy">Большая мечта<br />начинается<br /><span className="hero-title-accent">с первого шага.</span></span><span className="mobile-copy">Лечение бесплодия<br /><span className="hero-title-accent">и ЭКО.</span></span></h1>
-            <div className="hero-support"><p className="hero-lead"><span className="desktop-copy">Диагностика, лечение бесплодия и ЭКО.<br className="desktop-break" /> Рядом, чтобы помочь вам найти свой путь.</span><span className="mobile-copy">Репродуктологи, гинекологи и эмбриологи в Казани.</span></p><div className="hero-actions"><a href="#contact" className="button button-primary">Обсудить первый приём <ArrowUpRight /></a><a href="#directions" className="hero-secondary">Направления <ArrowDown /></a></div></div>
+            <div className="hero-support"><p className="hero-lead"><span className="desktop-copy">Диагностика, лечение бесплодия и ЭКО.<br className="desktop-break" /> Рядом, чтобы помочь вам найти свой путь.</span><span className="mobile-copy">Репродуктологи, гинекологи и эмбриологи в Казани.</span></p><div className="hero-actions"><a href="#contact" className="button button-primary">Записаться на приём <ArrowUpRight /></a></div></div>
             <div className="hero-location"><span>Клиника семейной медицины</span><span>Казань, Зур Урам, 33</span></div>
           </div>
           <figure className="hero-visual"><img className="hero-image" src={media('hero').src} alt={media('hero').generated ? 'Художественная визуализация лабораторного натюрморта на тему эмбриологии' : 'Эмбриологическая работа под микроскопом — фотография из материалов клиники'} width={1140} height={648} fetchPriority="high" /><div className="hero-visual-shade" /><figcaption><span>Здесь зарождается жизнь</span></figcaption></figure>
@@ -121,9 +121,9 @@ export default function App() {
         <div className="container">
           <h2>Почему нам доверяют</h2>
           <ul className="trust-facts">
-            <li><h3>Команда</h3><p>Репродуктологи и эмбриологи ведут приём в одной клинике.</p></li>
-            <li><h3>Диагностика</h3><p>В клинике проводят УЗИ и лабораторные исследования.</p></li>
-            <li><h3>ЭКО по ОМС</h3><a className="text-link" href={clinic.omsUrl} target="_blank" rel="noreferrer">Условия программы <ArrowUpRight /></a></li>
+            <li><h3><UsersThree size={24} aria-hidden="true" />Команда</h3><p>Репродуктологи и эмбриологи ведут приём в одной клинике.</p></li>
+            <li><h3><Microscope size={24} aria-hidden="true" />Диагностика</h3><p>В клинике проводят УЗИ и лабораторные исследования.</p></li>
+            <li><h3><IdentificationCard size={24} aria-hidden="true" />ЭКО по ОМС</h3><a className="text-link" href={clinic.omsUrl} target="_blank" rel="noreferrer">Условия программы <ArrowUpRight /></a></li>
           </ul>
         </div>
       </section>
