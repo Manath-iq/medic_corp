@@ -1,11 +1,5 @@
-.team-page { --team-gutter: 24px; min-height: 100vh; }
+.team-page { --team-gutter: 24px; min-height: 100vh; padding-top: 104px; }
 .team-shell { max-width: 1180px; width: calc(100% - 2 * var(--team-gutter)); margin-inline: auto; }
-.team-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-block: 18px 10px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 60px; background: var(--surface); }
-.team-brand, .team-header nav, .team-header-phone { display: flex; align-items: center; gap: 12px; }
-.team-brand { font-size: 12px; line-height: 1.2; font-weight: 750; }
-.team-brand img { width: 42px; height: 42px; padding: 5px; border-radius: 50%; background: var(--primary); }
-.team-header nav { gap: 28px; font-size: 14px; font-weight: 650; }
-.team-header-phone { min-height: 44px; padding: 0 16px; border-radius: 30px; color: white; background: var(--primary); font-size: 14px; font-weight: 750; }
 .team-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 6px; color: var(--primary); font-size: 14px; font-weight: 750; }
 .team-back svg { width: 17px; height: 17px; }
 .team-intro { padding: clamp(18px, 3vw, 32px); background: var(--dark); border-radius: var(--r-slab); padding: clamp(24px, 5vw, 64px); }
@@ -59,7 +53,7 @@
 .team-prices li { display: flex; justify-content: space-between; align-items: start; gap: 8px 16px; padding-block: 12px; border-top: 1px solid var(--line); }
 .team-prices span { display: block; font-size: 14px; color: var(--muted); }
 .team-prices b { white-space: nowrap; color: var(--primary); }
-.team-appointment { grid-column: 2; grid-row: 1; position: sticky; top: 16px; background: var(--dark); color: white; }
+.team-appointment { grid-column: 2; grid-row: 1; position: sticky; top: 108px; background: var(--dark); color: white; }
 .team-appointment > p { color: var(--on-dark-muted); }
 .team-appointment dl { display: grid; gap: 14px; margin-block: 20px; }
 .team-appointment dt { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--on-dark-muted); }
@@ -72,12 +66,7 @@
   .team-portrait { aspect-ratio: 4 / 3.5; }
 }
 @media (max-width: 680px) {
-  .team-page { --team-gutter: 16px; }
-  .team-header { margin-block: 10px 6px; gap: 8px; padding: 5px 8px; }
-  .team-header nav { display: none; }
-  .team-brand { min-height: 44px; }
-  .team-header-phone { padding: 0; justify-content: center; width: 44px; font-size: 19px; }
-  .team-header-phone span { display: none; }
+  .team-page { --team-gutter: 16px; padding-top: 84px; }
   .team-grid { gap: 10px; }
   .team-card { padding: 6px; border-radius: 16px; }
   .team-portrait { aspect-ratio: 4 / 4.6; border-radius: 11px; }

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Clock, MapPin, Phone } from '@phosphor-icons/react'
 import { asset, clinic, prices, rubles, specialists as specialistProfiles } from './data'
+import SiteHeader from './SiteHeader'
 import Footer from './Footer'
 import { specialistHref, specialistsHref } from './specialist-links'
 import catalog from './specialists.json'
@@ -119,11 +120,7 @@ function Profile({ doctor }: { doctor: Doctor }) {
 export default function Specialists({ doctor }: { doctor?: Doctor }) {
   return <div className="team-page">
     <a className="skip-link" href="#team-main">Перейти к содержимому</a>
-    <header className="team-shell team-header">
-      <a href={home} className="team-brand" aria-label="Клиника семейной медицины, на главную"><img src={asset('logo-small.webp')} alt="" width="42" height="42" /><span>Клиника<br />семейной медицины</span></a>
-      <nav aria-label="Навигация раздела"><a href={doctor ? directoryHref : specialistsHref} aria-current={doctor ? undefined : "page"}>Специалисты</a><a href={home + '#location'}>Контакты</a></nav>
-      <a href={clinic.phoneHref} className="team-header-phone" aria-label={`Позвонить в клинику: ${clinic.phone}`}><Phone aria-hidden="true" /><span>{clinic.phone}</span></a>
-    </header>
+    <SiteHeader home={home} />
     <main className="team-shell" id="team-main">
       <a className="team-back" href={doctor ? directoryHref : home}><ArrowLeft aria-hidden="true" /> {doctor ? 'Все специалисты' : 'На главную'}</a>
       {doctor ? <Profile doctor={doctor} /> : <Directory />}
