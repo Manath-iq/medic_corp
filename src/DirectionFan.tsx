@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from '@phosphor-icons/react'
 import { directions } from './data'
+import { categoryHref } from './services-links'
 import { media } from './media'
 import type { MediaSlot } from './media'
 
@@ -154,7 +155,7 @@ export default function DirectionFan() {
       <div className="direction-detail" aria-live="polite" aria-atomic="true">
         <h3>{current.name}</h3>
         <p key={current.id}>{current.detail}</p>
-        <a className="text-link" href="#contact">Уточнить приём <ArrowUpRight /></a>
+        <a className="text-link" href={categoryHref(current.id)}>Услуги и цены <ArrowUpRight /></a>
       </div>
       <div className="direction-index" aria-label="Выбор направления">
         {directions.map((direction, index) => <button key={direction.id} onClick={() => choose(index)} aria-pressed={index === selected}>{direction.name}</button>)}

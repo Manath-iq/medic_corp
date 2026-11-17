@@ -117,13 +117,13 @@ function Profile({ doctor }: { doctor: Doctor }) {
   </>
 }
 
-export default function Specialists({ doctor }: { doctor?: Doctor }) {
+export default function Specialists({ doctor, missing = false }: { doctor?: Doctor; missing?: boolean }) {
   return <div className="team-page">
     <a className="skip-link" href="#team-main">Перейти к содержимому</a>
     <SiteHeader home={home} />
     <main className="team-shell" id="team-main">
-      <a className="team-back" href={doctor ? directoryHref : home}><ArrowLeft aria-hidden="true" /> {doctor ? 'Все специалисты' : 'На главную'}</a>
-      {doctor ? <Profile doctor={doctor} /> : <Directory />}
+      <a className="team-back" href={doctor || missing ? directoryHref : home}><ArrowLeft aria-hidden="true" /> {doctor || missing ? 'Все специалисты' : 'На главную'}</a>
+      {missing ? <section className="team-intro"><h1>Специалист не найден</h1><p className="team-missing-note">Выберите специалиста в каталоге клиники.</p><a className="button team-call" href={specialistsHref}>Все специалисты</a></section> : doctor ? <Profile doctor={doctor} /> : <Directory />}
     </main>
     <Footer />
   </div>

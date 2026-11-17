@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
 import { asset, clinic } from './data'
 import { specialistsHref } from './specialist-links'
+import { servicesHref } from './services-links'
 
-const nav = [['#offers', 'Акции'], ['#directions', 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], ['#location', 'Контакты']]
+const nav = [['#offers', 'Акции'], [servicesHref, 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], ['#location', 'Контакты']]
 
 export default function SiteHeader({ home = '' }: { home?: string }) {
+  const currentPage = window.location.pathname
+  const isCurrent = (href: string) => !href.startsWith('#') && currentPage === href
   const root = useRef<HTMLElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)
   const mobileNav = useRef<HTMLElement>(null)
@@ -42,10 +45,10 @@ export default function SiteHeader({ home = '' }: { home?: string }) {
           <span className="brand-symbol"><img src={asset('logo-small.webp')} alt="КСМ" width={156} height={156} /></span>
           <span>Клиника<br />семейной медицины</span>
         </a>
-        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} href={href.startsWith('#') ? home + href : href}>{label}</a>)}</nav>
+        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href.startsWith('#') ? home + href : href}>{label}</a>)}</nav>
         <div className="nav-actions"><a className="nav-phone" href={clinic.phoneHref}>{clinic.phone}</a><a className="button button-primary button-small" href={home + '#contact'}>Первый приём <ArrowUpRight /></a><button ref={menuButton} className="menu-toggle icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}>{menuOpen ? <X /> : <List />}</button></div>
       </div>
-      {menuOpen && <nav ref={mobileNav} id="mobile-nav" className="mobile-nav" aria-label="Мобильная навигация">{nav.map(([href, label]) => <a key={href} href={href.startsWith('#') ? home + href : href} onClick={() => {
+      {menuOpen && <nav ref={mobileNav} id="mobile-nav" className="mobile-nav" aria-label="Мобильная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href.startsWith('#') ? home + href : href} onClick={() => {
         setMenuOpen(false)
         // Keep keyboard navigation at the chosen section after removing its link.
         if (home || !href.startsWith('#')) return

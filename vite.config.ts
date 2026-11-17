@@ -4,8 +4,24 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { mediaExtensions, mediaSlots } from './src/media-slots.ts'
 
+let siteBase = '/'
+
 export default defineConfig({
   plugins: [react(), {
+    // One icon set for every HTML entry, including direct profile/service URLs.
+    name: 'shared-site-icons',
+    configResolved(config) { siteBase = config.base },
+    transformIndexHtml: {
+      order: 'post',
+      handler() {
+        return [
+          { tag: 'link', attrs: { rel: 'icon', type: 'image/x-icon', sizes: '16x16 32x32 48x48', href: `${siteBase}icons/ksm-v1.ico` }, injectTo: 'head' },
+          { tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${siteBase}icons/ksm-v1-32.png` }, injectTo: 'head' },
+          { tag: 'link', attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: `${siteBase}icons/ksm-v1-180.png` }, injectTo: 'head' },
+        ]
+      },
+    },
+  }, {
     name: 'preload-hero-image',
     transformIndexHtml: {
       // Run before Vite's asset processing so the URL gets the same build hash.
@@ -20,7 +36,7 @@ export default defineConfig({
       },
     },
   }],
-  build: { rolldownOptions: { input: ['index.html', 'specialists/index.html'] } },
+  build: { rolldownOptions: { input: ['index.html', 'specialists/index.html', 'services/index.html'] } },
   base: '/medic_corp/',
   server: { port: 4173, strictPort: true },
   preview: { port: 4174, strictPort: true },

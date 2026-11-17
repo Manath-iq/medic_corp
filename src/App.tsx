@@ -24,7 +24,7 @@ export default function App() {
           gsap.from(element, { y: 18, opacity: 0, duration: 0.65, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 93%', once: true } })
         })
         gsap.from('.trust-facts li', {
-          y: 12, opacity: 0.35, duration: 0.38, stagger: 0.055, ease: 'power3.out',
+          y: 12, duration: 0.38, stagger: 0.055, ease: 'power3.out',
           scrollTrigger: { trigger: '.trust-facts', start: 'top 92%', once: true },
         })
         gsap.to('.hero-image', { yPercent: -5, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })

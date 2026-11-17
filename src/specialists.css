@@ -82,3 +82,5 @@
   .team-details { grid-row: auto; }
   .team-appointment { position: static; grid-column: auto; grid-row: auto; }
 }
+
+.team-missing-note { color: var(--on-dark-muted); margin-block: 18px 24px; }
