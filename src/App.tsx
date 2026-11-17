@@ -6,12 +6,13 @@ import DirectionFan from './DirectionFan'
 import { LocationSection, ReviewsSection } from './ClinicTrust'
 import { FaqSection } from './LandingSections'
 import { asset, clinic, prices, rubles, specialists } from './data'
+import { specialistHref, specialistsHref } from './specialist-links'
 import { media } from './media'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const newsUrl = 'https://ksm-eko.ru/index.php/novosti-i-akcii'
-const nav = [['#offers', 'Акции'], ['#directions', 'Услуги'], ['#prices', 'Цены'], ['#doctors', 'Специалисты'], ['#location', 'Контакты']]
+const nav = [['#offers', 'Акции'], ['#directions', 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], ['#location', 'Контакты']]
 
 export default function App() {
   const root = useRef<HTMLDivElement>(null)
@@ -83,6 +84,7 @@ export default function App() {
       {menuOpen && <nav ref={mobileNav} id="mobile-nav" className="mobile-nav" aria-label="Мобильная навигация">{nav.map(([href, label]) => <a key={href} href={href} onClick={() => {
         setMenuOpen(false)
         // Keep keyboard navigation at the chosen section after removing its link.
+        if (!href.startsWith('#')) return
         const section = document.querySelector<HTMLElement>(href)
         if (section) { section.tabIndex = -1; section.focus({ preventScroll: true }) }
       }}>{label}<ArrowUpRight /></a>)}<a href={clinic.phoneHref}>{clinic.phone}<Phone /></a></nav>}
@@ -130,8 +132,8 @@ export default function App() {
 
       <section id="doctors" className="doctors-section section container">
         <div className="section-heading" data-reveal><h2><span className="desktop-copy">За каждым решением —<br />конкретный человек.</span><span className="mobile-copy">Специалисты<br />клиники.</span></h2><p className="desktop-copy">Специалисты по репродуктивному здоровью<br className="desktop-break" /> и эмбриологии.</p></div>
-        <ul className="doctor-grid">{specialists.map(doctor => <li key={doctor.name} className="doctor-card" data-reveal><a className="doctor-photo" href={doctor.url} target="_blank" rel="noreferrer" aria-label={`${doctor.name} ${doctor.given}: сведения на сайте клиники`}><img src={asset(doctor.image)} alt={`${doctor.name} ${doctor.given}`} width={450} height={675} loading="lazy" /><span className="doctor-open"><ArrowUpRight /></span></a><h3>{doctor.name}<span>{doctor.given}</span></h3><p className="doctor-role">{doctor.role}</p><p className="doctor-detail">{doctor.detail}</p></li>)}</ul>
-        <a className="text-link all-specialists" href="https://ksm-eko.ru/index.php/home/specialisty" target="_blank" rel="noreferrer">Все специалисты на сайте клиники <ArrowUpRight /></a>
+        <ul className="doctor-grid">{specialists.map(doctor => <li key={doctor.id} className="doctor-card" data-reveal><a style={{ display: 'block' }} href={specialistHref(doctor.id)} aria-label={`${doctor.name} ${doctor.given}, профиль специалиста`}><span className="doctor-photo"><img src={asset(doctor.image)} alt={`${doctor.name} ${doctor.given}`} width={450} height={675} loading="lazy" /><span className="doctor-open"><ArrowUpRight /></span></span><h3>{doctor.name}<span>{doctor.given}</span></h3><p className="doctor-role">{doctor.role}</p><p className="doctor-detail">{doctor.detail}</p></a></li>)}</ul>
+        <a className="text-link all-specialists" href={specialistsHref}>Все специалисты <ArrowUpRight /></a>
       </section>
 
       <section id="contact" className="container">

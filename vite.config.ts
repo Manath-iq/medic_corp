@@ -11,6 +11,7 @@ export default defineConfig({
       // Run before Vite's asset processing so the URL gets the same build hash.
       order: 'pre',
       handler(_html, context) {
+        if (context.filename !== resolve('index.html')) return
         const root = resolve(context.filename, '..')
         const [name, fallback] = mediaSlots.hero
         const extension = mediaExtensions.find(ext => existsSync(resolve(root, `src/assets/generated/${name}.${ext}`)))
@@ -19,6 +20,7 @@ export default defineConfig({
       },
     },
   }],
+  build: { rolldownOptions: { input: ['index.html', 'specialists/index.html'] } },
   base: '/medic_corp/',
   server: { port: 4173, strictPort: true },
   preview: { port: 4174, strictPort: true },

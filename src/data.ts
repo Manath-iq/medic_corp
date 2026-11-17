@@ -1,3 +1,5 @@
+import catalog from './specialists.json'
+
 export const asset = (name: string) => `${import.meta.env.BASE_URL}assets/clinic/${name}`
 
 export const clinic = {
@@ -25,12 +27,7 @@ export const directions = [
   { id: 'andrology', name: 'Мужское здоровье', image: 'solovev.webp', note: 'Репродуктивное здоровье — общая история.', detail: 'Приём уролога и исследования мужского репродуктивного здоровья. Перечень обследований определяет специалист.', tag: 'Урология и диагностика' },
 ]
 
-export const specialists = [
-  { name: 'Соловьев', given: 'Анатолий Аркадьевич', image: 'solovev.webp', role: 'Акушер-гинеколог, репродуктолог, врач УЗД', detail: 'Заведующий отделением ВРТ', url: 'https://ksm-eko.ru/index.php/reproduktologi/akusher-ginekolog-reproduktolog-solovev-anatolij-arkadevich' },
-  { name: 'Капицкая', given: 'Наталья Юрьевна', image: 'kapitskaya.webp', role: 'Акушер-гинеколог, репродуктолог, врач УЗД', detail: 'Репродуктивное здоровье', url: 'https://ksm-eko.ru/index.php/home/specialisty' },
-  { name: 'Мотина', given: 'Наталья Владимировна', image: 'motina.webp', role: 'Главный эмбриолог, врач КДЛ', detail: 'Эмбриология', url: 'https://ksm-eko.ru/index.php/embriologii/glavnyj-embriolog-vrach-kdl-motina-natalya-vladimirovna' },
-  { name: 'Жиряева', given: 'Елена Андреевна', image: 'zhiryaeva.webp', role: 'Ведущий эмбриолог', detail: 'Эмбриология', url: 'https://ksm-eko.ru/index.php/embriologii/zhiryaeva-elena-andreevna-vedushchij-embriolog' },
-]
+export const specialists = catalog.doctors
 
 export const prices = [
   { name: 'Первичный приём репродуктолога', note: 'Консультация акушера-гинеколога с УЗИ', amount: 4500, category: 'Репродуктология' },
