@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
-import { UsersThree, Microscope, IdentificationCard, ArrowRight, ArrowUpRight, Phone } from '@phosphor-icons/react'
+import { UsersThree, Microscope, IdentificationCard, ArrowUpRight, Phone } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Footer from './Footer'
 import SiteHeader from './SiteHeader'
 import DirectionFan from './DirectionFan'
 import { LocationSection, ReviewsSection } from './ClinicTrust'
@@ -80,7 +81,7 @@ export default function App() {
           <ul className="trust-facts">
             <li><h3><UsersThree size={24} aria-hidden="true" />Команда</h3><p>Репродуктологи и эмбриологи ведут приём в одной клинике.</p></li>
             <li><h3><Microscope size={24} aria-hidden="true" />Диагностика</h3><p>В клинике проводят УЗИ и лабораторные исследования.</p></li>
-            <li><h3><IdentificationCard size={24} aria-hidden="true" />ЭКО по ОМС</h3><a className="text-link" href={clinic.omsUrl} target="_blank" rel="noreferrer">Условия программы <ArrowUpRight /></a></li>
+            <li><h3><IdentificationCard size={24} aria-hidden="true" />ЭКО по ОМС</h3><a className="text-link" href={clinic.omsUrl}>Условия программы <ArrowUpRight /></a></li>
           </ul>
         </div>
       </section>
@@ -105,38 +106,12 @@ export default function App() {
           <div className="compact-heading"><h2>Новости</h2><a className="text-link" href={newsUrl} target="_blank" rel="noreferrer">Все новости <ArrowUpRight /></a></div>
           <div className="news-grid">
             <a className="news-item" href={newsUrl + '/priglashaem-stat-donorami-ootsitov'} target="_blank" rel="noreferrer"><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
-            <a className="news-item" href={clinic.firstVisitUrl} target="_blank" rel="noreferrer"><small>Первый приём</small><span>Как проходит первое знакомство с репродуктологом <ArrowUpRight /></span></a>
-            <a className="news-item" href={clinic.preparationUrl} target="_blank" rel="noreferrer"><small>Подготовка к обследованиям</small><span>Памятка перед визитом на обследование <ArrowUpRight /></span></a>
+            <a className="news-item" href={clinic.firstVisitUrl}><small>Первый приём</small><span>Как проходит первое знакомство с репродуктологом <ArrowUpRight /></span></a>
+            <a className="news-item" href={clinic.preparationUrl}><small>Подготовка к обследованиям</small><span>Памятка перед визитом на обследование <ArrowUpRight /></span></a>
           </div>
         </div>
       </section>
     </main>
-    <footer id="footer" className="footer">
-      <div className="container">
-        <a className="footer-home" href="#main" aria-label="Клиника семейной медицины, наверх">
-          <img src={asset('logo-small.webp')} width="52" height="52" alt="" />
-          <span>Клиника<br />семейной медицины</span>
-        </a>
-        <div className="footer-directory">
-          <div className="footer-contacts">
-            <h2>Регистратура</h2>
-            <a className="footer-phone" href={clinic.phoneHref}>{clinic.phone}</a>
-            <a className="text-link" href="#location">{clinic.address} <ArrowUpRight /></a>
-          </div>
-          <nav className="footer-patient-links" aria-label="Информация пациентам">
-            <h2>Пациентам</h2>
-            <a href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения и лицензия <ArrowUpRight /></a>
-            <a href={clinic.patientUrl} target="_blank" rel="noreferrer">Информация для потребителя <ArrowUpRight /></a>
-            <a href={clinic.preparationUrl} target="_blank" rel="noreferrer">Подготовка к исследованиям <ArrowUpRight /></a>
-            <a href="#faq">Вопросы и ответы <ArrowUpRight /></a>
-            <a href={clinic.website} target="_blank" rel="noreferrer">ksm-eko.ru <ArrowRight /></a>
-          </nav>
-        </div>
-        <div className="footer-bottom">
-          <p>Имеются противопоказания.<br />Необходима консультация специалиста.</p>
-          <span>КСМ · 2026</span>
-        </div>
-      </div>
-    </footer>
+    <Footer />
   </div>
 }

@@ -4,7 +4,7 @@ import { asset, clinic } from './data'
 import { specialistsHref } from './specialist-links'
 import { servicesHref } from './services-links'
 
-const nav = [['#offers', 'Акции'], [servicesHref, 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], ['#location', 'Контакты']]
+const nav = [[clinic.informationUrl, 'О клинике'], ['#offers', 'Акции'], [servicesHref, 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], [clinic.patientUrl, 'Пациентам'], [clinic.omsUrl, 'ЭКО по ОМС'], ['#location', 'Контакты']]
 
 export default function SiteHeader({ home = '' }: { home?: string }) {
   const currentPage = window.location.pathname

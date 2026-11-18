@@ -43,7 +43,7 @@ export function OmsSection() {
             {route.steps.map((step, index) => <li key={`${region}-${step.title}`}><span className="oms-step-number" aria-hidden="true">0{index + 1}</span><h4>{step.title}</h4><p>{step.body}</p></li>)}
           </ol>
         </div>
-        <div className="oms-note"><p>Направление выдаётся по решению комиссии, по медицинским показаниям. Квота не гарантируется. Услуги вне базовой программы оплачиваются отдельно — состав и условия уточните в клинике.</p><a className="text-link" href={route.source} target="_blank" rel="noreferrer">Полные условия ОМС <ArrowUpRight /></a></div>
+        <div className="oms-note"><p>Направление выдаётся по решению комиссии, по медицинским показаниям. Квота не гарантируется. Услуги вне базовой программы оплачиваются отдельно — состав и условия уточните в клинике.</p><a className="text-link" href={route.source}>Полные условия ОМС <ArrowUpRight /></a></div>
       </div>
     </div>
   </section>
@@ -107,7 +107,7 @@ export function AboutSection() {
       <figure className="about-visual" data-reveal><img src={asset('diagnostics.webp')} alt="Ультразвуковой аппарат — фотография из материалов действующего сайта КСМ" width={1140} height={648} loading="lazy" /><figcaption><MapPin aria-hidden="true" /><span>Казань, Зур Урам, 33<small>Из материалов действующего сайта КСМ</small></span></figcaption></figure>
       <div className="about-copy" data-reveal><span className="section-kicker">О клинике</span><h2 id="about-title">Репродуктивное<br />здоровье.<br />Личная история.</h2><p>Клиника семейной медицины в Казани занимается диагностикой и лечением женского и мужского бесплодия, программами ЭКО и вопросами репродуктивного здоровья.</p>
         <dl className="about-facts"><div><dt>Специалисты</dt><dd>Репродуктологи и эмбриологи</dd></div><div><dt>Диагностика</dt><dd>УЗИ и лабораторные исследования</dd></div><div><dt>Программы</dt><dd>ЭКО, в том числе по ОМС</dd></div></dl>
-        <a className="text-link" href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения о клинике и лицензия <ArrowUpRight /></a>
+        <a className="text-link" href={clinic.informationUrl}>Сведения о клинике и лицензия <ArrowUpRight /></a>
       </div>
     </div>
   </section>

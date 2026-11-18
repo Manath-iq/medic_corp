@@ -570,3 +570,11 @@ svg { flex-shrink: 0; }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .doctor-card a:hover img { transform: scale(1.03); }
 }
+
+/* Leave room for the patient information sections in the shared navigation. */
+.desktop-nav a { padding-inline: clamp(6px, .7vw, 11px); }
+@media (min-width: 951px) and (max-width: 1150px) {
+  .nav-bar, .nav-actions { gap: 8px; }
+  .desktop-nav { gap: 0; }
+  .nav-phone { display: none; }
+}

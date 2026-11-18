@@ -36,7 +36,7 @@ export default defineConfig({
       },
     },
   }],
-  build: { rolldownOptions: { input: ['index.html', 'specialists/index.html', 'services/index.html'] } },
+  build: { rolldownOptions: { input: ['index.html', 'specialists/index.html', 'services/index.html', 'about/index.html', 'patients/index.html', 'oms/index.html'] } },
   base: '/medic_corp/',
   server: { port: 4173, strictPort: true },
   preview: { port: 4174, strictPort: true },

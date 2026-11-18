@@ -9,12 +9,12 @@ export const clinic = {
   address: 'Казань, ул. Зур Урам, 33',
   website: 'https://ksm-eko.ru/',
   pricesUrl: 'https://ksm-eko.ru/index.php/ceny',
-  omsUrl: 'https://ksm-eko.ru/index.php/pacientu/eko-po-oms',
-  regionalOmsUrl: 'https://ksm-eko.ru/index.php/pacientu/nasi-uslugi/eko-po-oms-dlya-zhitelej-regionov-rf',
-  firstVisitUrl: 'https://ksm-eko.ru/index.php/pacientu/pervicnyj-priem',
-  preparationUrl: 'https://ksm-eko.ru/index.php/pacientu/podgotovka-i-issledovania',
-  informationUrl: 'https://ksm-eko.ru/index.php/home/svedenia-o-klinike',
-  patientUrl: 'https://ksm-eko.ru/index.php/pacientu/informatsiya-dlya-potrebitelya',
+  omsUrl: import.meta.env.BASE_URL + 'oms/',
+  regionalOmsUrl: import.meta.env.BASE_URL + 'oms/#regions',
+  firstVisitUrl: import.meta.env.BASE_URL + 'patients/#first-visit',
+  preparationUrl: import.meta.env.BASE_URL + 'patients/#preparation',
+  informationUrl: import.meta.env.BASE_URL + 'about/',
+  patientUrl: import.meta.env.BASE_URL + 'patients/',
 }
 
 // Public clinic content, November 2026. Not yet approved for an official launch.

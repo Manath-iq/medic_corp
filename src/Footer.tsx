@@ -20,9 +20,10 @@ export default function Footer() {
         </div>
         <nav className="footer-patient-links" aria-label="Информация пациентам">
           <h2>Пациентам</h2>
-          <a href={clinic.informationUrl} target="_blank" rel="noreferrer">Сведения и лицензия <ArrowUpRight /></a>
-          <a href={clinic.patientUrl} target="_blank" rel="noreferrer">Информация для потребителя <ArrowUpRight /></a>
-          <a href={clinic.preparationUrl} target="_blank" rel="noreferrer">Подготовка к исследованиям <ArrowUpRight /></a>
+          <a href={clinic.informationUrl}>Сведения и лицензия <ArrowUpRight /></a>
+          <a href={clinic.patientUrl}>Первый приём и документы <ArrowUpRight /></a>
+          <a href={clinic.preparationUrl}>Подготовка к исследованиям <ArrowUpRight /></a>
+          <a href={clinic.omsUrl}>ЭКО по ОМС <ArrowUpRight /></a>
           <a href={home + '#faq'}>Вопросы и ответы <ArrowUpRight /></a>
           <a href={clinic.website} target="_blank" rel="noreferrer">ksm-eko.ru <ArrowRight /></a>
         </nav>
