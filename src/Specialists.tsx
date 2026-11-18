@@ -66,7 +66,6 @@ function Profile({ doctor }: { doctor: Doctor }) {
     appointment.current?.focus({ preventScroll: true })
   }, [])
   const direction = catalog.directions.find(item => item.id === doctor.direction)
-  const VisitList = direction?.ordered ? 'ol' : 'ul'
   const services = prices.filter(service => service.category === direction?.label)
   return <>
     <section className="team-profile">
@@ -80,6 +79,25 @@ function Profile({ doctor }: { doctor: Doctor }) {
       </div>
     </section>
     <div className="team-profile-grid">
+      <div className="team-details">
+        <section className="team-panel">
+          <h2>С чем можно обратиться</h2>
+          <ul className="team-topics">{doctor.topics.map(topic => <li key={topic}>{topic}</li>)}</ul>
+        </section>
+        <section className="team-panel" id="credentials">
+          <h2>Образование и квалификация</h2>
+          {doctor.education.length ? <ul className="team-credentials">{doctor.education.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
+          <h3>Аккредитация и допуск к работе</h3>
+          {doctor.accreditation.length ? <ul className="team-credentials">{doctor.accreditation.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
+          <a className="text-link" href={doctor.url}>Источник на сайте КСМ <ArrowUpRight /></a>
+        </section>
+        <section className="team-panel">
+          <h2>Цена по направлениям</h2>
+          <p>Стоимость по прайсу клиники. Возможность записи на конкретную услугу уточните в регистратуре.</p>
+          <ul className="team-prices">{services.map(service => <li key={service.name}><div><strong>{service.name}</strong><span>{service.note}</span></div><b>{rubles(service.amount)}</b></li>)}</ul>
+          <a className="text-link" href={clinic.pricesUrl}>Полный прайс КСМ <ArrowUpRight /></a>
+        </section>
+      </div>
       <aside ref={appointment} id="appointment" tabIndex={-1} className="team-appointment" aria-labelledby="appointment-title">
         <h2 id="appointment-title">Запись на приём</h2>
         <p>Назовите имя специалиста администратору. Он подскажет доступное время и стоимость визита.</p>
@@ -88,30 +106,6 @@ function Profile({ doctor }: { doctor: Doctor }) {
         <a className="button team-call" href={clinic.phoneHref}><Phone /> {clinic.phone}</a>
         <a className="team-directions" href={home + '#location'}>Как добраться <ArrowUpRight /></a>
       </aside>
-      <div className="team-details">
-        <section className="team-panel">
-          <h2>С чем можно обратиться</h2>
-          <ul className="team-topics">{doctor.topics.map(topic => <li key={topic}>{topic}</li>)}</ul>
-        </section>
-        <section className="team-panel">
-          <h2>Приёмы по направлению</h2>
-          <p>Стоимость по прайсу клиники. Возможность записи на конкретную услугу уточните в регистратуре.</p>
-          <ul className="team-prices">{services.map(service => <li key={service.name}><div><strong>{service.name}</strong><span>{service.note}</span></div><b>{rubles(service.amount)}</b></li>)}</ul>
-          <a className="text-link" href={clinic.pricesUrl}>Полный прайс КСМ <ArrowUpRight /></a>
-        </section>
-        {direction && <section className="team-panel team-visit">
-          <h2>{direction.title}</h2>
-          <VisitList className={direction.ordered ? undefined : 'team-topics'}>{direction.items.map(item => <li key={item}>{item}</li>)}</VisitList>
-          <div className="team-visit-links">{direction.links.map(link => <a key={link.url} className="text-link" href={link.url}>{link.label} <ArrowUpRight /></a>)}</div>
-        </section>}
-        <section className="team-panel" id="credentials">
-          <h2>Образование и квалификация</h2>
-          {doctor.education.length ? <ul className="team-credentials">{doctor.education.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
-          <h3>Аккредитация и допуск к работе</h3>
-          {doctor.accreditation.length ? <ul className="team-credentials">{doctor.accreditation.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
-          <a className="text-link" href={doctor.url}>Источник на сайте КСМ <ArrowUpRight /></a>
-        </section>
-      </div>
     </div>
     <div className="team-directory-end"><a className="text-link" href={directoryHref}><ArrowLeft /> Все специалисты</a><a className="text-link" href={prodoctorov}>Отзывы о клинике на ПроДокторов <ArrowUpRight /></a></div>
   </>

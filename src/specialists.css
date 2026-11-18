@@ -9,20 +9,20 @@
 .team-toolbar { justify-content: space-between; margin-block: 18px 14px; }
 .team-toolbar > span { color: var(--muted); font-size: 13px; }
 .team-filters button { min-height: 44px; padding: 8px 15px; border: 1px solid var(--line); border-radius: 40px; background: var(--surface); color: var(--primary); font: inherit; font-size: 13px; font-weight: 750; }
-.team-filters button[aria-pressed=true] { color: white; background: var(--primary); border-color: var(--primary); }
+.team-filters button[aria-pressed=true] { color: white; background: var(--forest); border-color: var(--forest); }
 .team-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
 .team-card { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; }
 .team-portrait { display: block; aspect-ratio: 4 / 4.5; border-radius: 15px; overflow: hidden; background: var(--surface-2); }
 .team-portrait img, .team-profile-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
 .team-card-copy { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 10px 8px; }
-.team-tag { display: inline-block; padding: 5px 10px; border-radius: 30px; background: var(--surface-2); color: var(--primary); font-size: 12px; font-weight: 800; }
+.team-tag { display: inline-block; padding: 5px 10px; border-radius: 30px; background: var(--forest-soft); color: var(--forest); font-size: 12px; font-weight: 800; }
 .team-card h2 { font-size: clamp(20px, 2vw, 27px); line-height: 1.08; }
 .team-card h2 span { display: block; margin-top: 4px; font-size: .72em; line-height: 1.2; }
 .team-card p { color: var(--muted); font-size: 14px; line-height: 1.5; }
 .team-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 14px; margin-top: auto; }
 .team-card-link, .team-card-book { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--primary); font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
 .team-card-link::after { content: ''; position: absolute; inset: 0; border-radius: 22px; }
-.team-card:focus-within { border-color: var(--primary); }
+.team-card:focus-within { border-color: var(--forest); }
 .team-card-book { position: relative; padding: 0 9px; border-radius: 14px; background: var(--surface-2); text-decoration: none; }
 .team-card-book svg, .team-card-link svg { flex: 0 0 auto; }
 .team-directory-end { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; margin-block: 25px 45px; }
@@ -42,10 +42,6 @@
 .team-panel { background: var(--surface); border: 1px solid var(--line); }
 .team-panel h2, .team-appointment h2 { font-size: clamp(24px, 3vw, 34px); line-height: 1.1; letter-spacing: -.045em; margin-bottom: 14px; }
 .team-panel p { color: var(--muted); }
-.team-visit { background: var(--surface-2); }
-.team-visit ol { display: grid; gap: 8px; margin: 0; padding-left: 20px; }
-.team-visit-links { display: flex; flex-wrap: wrap; gap: 0 18px; }
-.team-visit .text-link { white-space: normal; }
 .team-panel h3 { font-size: 17px; margin: 16px 0 8px; }
 .team-panel .text-link { margin-top: 14px; }
 .team-topics, .team-credentials { display: grid; gap: 9px; list-style: disc; padding-left: 20px; }
@@ -84,3 +80,14 @@
 }
 
 .team-missing-note { color: var(--on-dark-muted); margin-block: 18px 24px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .team-card { transition: border-color .18s, box-shadow .18s; }
+  .team-card:hover { border-color: var(--forest); box-shadow: var(--shadow-card); }
+  .team-card:has(.team-card-link:hover) h2 { color: var(--forest); }
+  .team-card-book:hover, .team-filters button:not([aria-pressed=true]):hover { background: var(--forest-soft); color: var(--forest); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .team-portrait img { transition: transform .24s var(--ease); }
+  .team-card:has(.team-card-link:hover) img { transform: scale(1.025); }
+}

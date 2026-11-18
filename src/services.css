@@ -5,7 +5,7 @@
 .svc-hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; background: var(--dark); color: white; padding: 18px 18px 18px 46px; border-radius: var(--r-slab); }
 .svc-hero-copy { align-self: center; padding-block: 28px; }
 .svc-small { display: block; font-size: 12px; margin-bottom: 20px; }
-.svc-hero .svc-small { color: var(--on-dark-muted); }
+.svc-hero .svc-small { color: #c6e5d4; }
 .svc-hero h1 { font-size: clamp(34px,4.3vw,56px); line-height: 1.1; letter-spacing: -.05em; }
 .svc-hero p { max-width: 40ch; color: var(--on-dark-muted); font-size: 14px; margin: 22px 0 28px; }
 .svc-call { background: var(--accent-soft); color: var(--dark); }
@@ -28,7 +28,7 @@
 .svc-categories { display: grid; gap: 5px; }
 .svc-categories button { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; padding: 14px 16px; min-height: 50px; border-radius: 13px; background: transparent; font-size: 13px; font-weight: 650; }
 .svc-categories button span { font-size: 11px; font-variant-numeric: tabular-nums; }
-.svc-categories button[aria-pressed=true] { background: var(--dark); color: white; }
+.svc-categories button[aria-pressed=true] { background: var(--forest); color: white; }
 .svc-sidebar-note { margin: 28px 16px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 12px; }
 .svc-sidebar-note p { color: var(--muted); }
 .svc-sidebar-note a { display: flex; align-items: center; gap: 12px; min-height: 44px; font-weight: 700; }
@@ -68,7 +68,7 @@
 .svc-empty { display: grid; justify-items: start; gap: 20px; padding: 40px; border-radius: 20px; background: var(--surface); margin-block: 20px 40px; }
 .svc-empty p { color: var(--muted); max-width: 50ch; }
 .svc-detail-heading { max-width: 850px; padding-block: 24px 38px; }
-.svc-tag { display: inline-block; font-size: 12px; border-radius: 30px; background: var(--surface-2); padding: 6px 13px; margin-bottom: 20px; }
+.svc-tag { display: inline-block; font-size: 12px; border-radius: 30px; color: var(--forest); background: var(--forest-soft); padding: 6px 13px; margin-bottom: 20px; }
 .svc-detail-heading h1 { font-size: clamp(36px,5vw,64px); line-height: 1.08; }
 .svc-detail-heading > p { margin-top: 20px; color: var(--muted); font-size: 17px; }
 .svc-detail-layout { display: grid; grid-template-columns: minmax(0,1fr) 350px; gap: 24px; align-items: start; padding-bottom: 70px; }

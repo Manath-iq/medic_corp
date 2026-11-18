@@ -347,7 +347,11 @@ svg { flex-shrink: 0; }
   .desktop-nav a:hover { background: var(--surface-2); color: var(--ink); }
   .icon-button:hover,.direction-card:hover .direction-select { background: var(--accent-soft); color: var(--ink); }
   .text-link:hover svg { transform: translate(2px,-2px); }
-  .doctor-photo:hover img { transform: scale(1.03); }
+  :where(a[href], summary):hover { text-decoration: underline; text-underline-offset: .2em; }
+  :where(button:enabled, select):hover { outline: 1px solid currentColor; outline-offset: -2px; }
+  .doctor-card a:hover { color: var(--forest); text-decoration: none; }
+  .doctor-card a:hover h3 { text-decoration: underline; text-underline-offset: .15em; }
+  .offers-strip .button:hover { background: var(--forest); color: white; }
   .direction-index button:hover:not([aria-pressed=true]),.price-filters button:hover:not([aria-pressed=true]) { background: var(--surface-2); }
   .region-options input:not(:checked) + span:hover { background: var(--accent-soft); color: var(--dark); }
   .faq-item summary:hover .faq-question,.footer-patient-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -473,13 +477,13 @@ svg { flex-shrink: 0; }
   .route-marker,.region-options label > span { border-color: ButtonText; }
 }
 
-:root { --forest: #204c40; }
+:root { --forest: #204c40; --forest-soft: #e0e9df; }
 .offers-section { margin-top: 38px; }
 .offers-strip, .booking-strip {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
   padding: clamp(24px, 4vw, 52px); border-radius: var(--r-card);
 }
-.offers-strip { background: #e0e9df; color: var(--forest); border-left: 5px solid var(--forest); }
+.offers-strip { background: var(--forest-soft); color: var(--forest); border-left: 5px solid var(--forest); }
 .offers-strip h2, .booking-strip h2, .compact-heading h2, .trust-band h2 { font-size: clamp(28px, 3vw, 40px); }
 .offers-strip p, .booking-strip p { margin-top: 8px; font-size: 14px; }
 .offers-strip .button { color: var(--forest); border-color: currentColor; }
@@ -504,7 +508,7 @@ svg { flex-shrink: 0; }
 .reviews-section { padding-block: clamp(40px, 5vw, 72px); }
 .faq-section { border-block: 1px solid var(--line); background: var(--surface); padding-block: clamp(40px, 5vw, 72px); }
 .location-section { padding-block: clamp(40px, 5vw, 72px); }
-.news-section { background: #e0e9df; padding-block: clamp(32px, 4vw, 56px); }
+.news-section { background: var(--forest-soft); padding-block: clamp(32px, 4vw, 56px); }
 .news-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(18px,3vw,44px); }
 .news-item { display: block; border-top: 1px solid #a1b7ac; padding-block: 16px; }
 .news-item small { display: block; margin-bottom: 10px; color: var(--forest); }
@@ -562,3 +566,7 @@ svg { flex-shrink: 0; }
 
 /* Identify the current section with shape and text, as well as color. */
 .desktop-nav a[aria-current=page], .mobile-nav a[aria-current=page] { background: var(--surface-2); color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .doctor-card a:hover img { transform: scale(1.03); }
+}
