@@ -44,7 +44,7 @@
 .svc-row-copy > span { display: block; font-size: 12px; color: var(--muted); }
 .svc-row > strong { font-size: 15px; font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .svc-row-arrow { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--bg); }
-.svc-row:focus-visible { outline-offset: -4px; }
+.svc-row:focus-visible { outline-offset: -4px; background: var(--forest-soft); }
 .svc-catalog-note,.svc-price-note { color: var(--muted); font-size: 12px; line-height: 1.7; }
 .svc-help { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; margin-block: 80px; }
 .svc-help > div { padding-left: 30px; }
@@ -94,7 +94,7 @@
 .svc-doctors > p { font-size: 12px; color: var(--muted); margin-top: 14px; }
 .svc-source { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
 .svc-source a { display: flex; gap: 8px; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
-@media (hover:hover) { .svc-row:hover { background: #f3eee5; } .svc-categories button:not([aria-pressed=true]):hover { background: var(--surface-2); } .svc-call:hover { background: var(--accent-soft-hover); } }
+@media (hover:hover) { .svc-row:hover { background: var(--forest-soft); } .svc-categories button:not([aria-pressed=true]):hover { background: var(--forest-soft); } .svc-call:hover { background: var(--accent-soft-hover); } }
 @media (max-width:950px) {
   .svc-hero { padding-left: 30px; gap: 20px; }
   .svc-catalog-layout { grid-template-columns: 210px minmax(0,1fr); gap: 20px; }

@@ -104,7 +104,7 @@ export function StartSection() {
 export function AboutSection() {
   return <section id="about" className="about-section section container" aria-labelledby="about-title">
     <div className="about-layout">
-      <figure className="about-visual" data-reveal><img src={asset('diagnostics.webp')} alt="Ультразвуковой аппарат — фотография из материалов действующего сайта КСМ" width={1140} height={648} loading="lazy" /><figcaption><MapPin aria-hidden="true" /><span>Казань, Зур Урам, 33<small>Из материалов действующего сайта КСМ</small></span></figcaption></figure>
+      <figure className="about-visual" data-reveal><img src={asset('diagnostics.webp')} alt="Ультразвуковой аппарат — фотография клиники" width={1140} height={648} loading="lazy" /><figcaption><MapPin aria-hidden="true" /><span>Казань, Зур Урам, 33<small>Клиника семейной медицины</small></span></figcaption></figure>
       <div className="about-copy" data-reveal><span className="section-kicker">О клинике</span><h2 id="about-title">Репродуктивное<br />здоровье.<br />Личная история.</h2><p>Клиника семейной медицины в Казани занимается диагностикой и лечением женского и мужского бесплодия, программами ЭКО и вопросами репродуктивного здоровья.</p>
         <dl className="about-facts"><div><dt>Специалисты</dt><dd>Репродуктологи и эмбриологи</dd></div><div><dt>Диагностика</dt><dd>УЗИ и лабораторные исследования</dd></div><div><dt>Программы</dt><dd>ЭКО, в том числе по ОМС</dd></div></dl>
         <a className="text-link" href={clinic.informationUrl}>Сведения о клинике и лицензия <ArrowUpRight /></a>

@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, MagnifyingGlass, Phone, X } from '@phosphor-icons/react'
 import SiteHeader from './SiteHeader'
 import Footer from './Footer'
-import { asset, clinic, rubles, specialists } from './data'
+import { asset, clinic, specialists } from './data'
 import { specialistHref } from './specialist-links'
-import { serviceCategories, services } from './services-data'
+import { priceLabel, serviceCategories, services } from './services-data'
 import { serviceHref, servicesHref } from './services-links'
 import type { Service } from './services-data'
 
 const home = import.meta.env.BASE_URL
 const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim()
-const priceLabel = (service: Service) => service.price.kind === 'oms' ? 'По программе ОМС' : service.price.amount === null ? 'Уточнить стоимость' : rubles(service.price.amount)
 
 function Appointment({ service }: { service?: Service }) {
   return <aside className="svc-appointment">
@@ -19,7 +18,7 @@ function Appointment({ service }: { service?: Service }) {
     <p>{service ? service.price.note : 'Если не знаете, к кому обратиться, позвоните в регистратуру. Поможем выбрать вид приёма и время визита.'}</p>
     <a className="button svc-call" href={clinic.phoneHref}><Phone />{service ? 'Позвонить и записаться' : 'Позвонить в клинику'}</a>
     <a className="svc-phone" href={clinic.phoneHref}>{clinic.phone}</a>
-    <div className="svc-address"><span>Клиника семейной медицины</span><a href={home + '#location'}>{clinic.address} <ArrowUpRight size={16} /></a></div>
+    <div className="svc-address"><span>Клиника семейной медицины</span><a href={clinic.contactsUrl}>{clinic.address} <ArrowUpRight size={16} /></a></div>
   </aside>
 }
 
@@ -32,9 +31,9 @@ function Details({ service, back }: { service: Service; back: string }) {
     <div className="svc-detail-layout">
       <div className="svc-detail-content">
         <section className="svc-panel"><h2>Об услуге</h2><p>{service.description}</p><h3>{service.price.amount === null ? 'Что уточнить при обращении' : 'Что входит'}</h3><ul className="svc-includes">{service.includes.map(item => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul><p className="svc-price-note">{service.price.amount === null ? 'Точный состав и условия согласуются с клиникой.' : 'Дополнительные исследования и процедуры не включены, если не указаны в составе услуги.'}</p></section>
-        <section className="svc-panel svc-preparation"><h2>Перед визитом</h2><p>{service.preparation}</p><a className="text-link" href={clinic.preparationUrl}>Памятка по подготовке <ArrowUpRight /></a></section>
+        <section id="preparation" className="svc-panel svc-preparation"><h2>Перед визитом</h2><p>{service.preparation}</p><a className="text-link" href={clinic.preparationUrl}>Памятка по подготовке <ArrowUpRight /></a></section>
         {doctors.length > 0 && <section className="svc-doctors"><h2>Специалисты направления</h2><div>{doctors.map(doctor => <a key={doctor.id} href={specialistHref(doctor.id)}><img src={asset(doctor.image)} alt="" width={72} height={88} loading="lazy" /><span><strong>{doctor.name}<br />{doctor.given}</strong><small>{doctor.role}</small></span><ArrowUpRight aria-hidden="true" /></a>)}</div><p>Специалиста и доступное время уточните при записи.</p></section>}
-        <div className="svc-source"><span>{service.sourceCode && `Позиция прайса ${service.sourceCode}. `}Стоимость носит справочный характер.</span><a href={service.sourceUrl} target="_blank" rel="noreferrer">Источник на сайте клиники <ArrowUpRight size={16} /></a></div>
+        <div className="svc-source"><span>{service.sourceCode && `Позиция прайса ${service.sourceCode}. `}Стоимость носит справочный характер.</span><a href={clinic.priceListUrl + '#' + category.id}>Цены по направлению <ArrowUpRight size={16} /></a></div>
       </div>
       <Appointment service={service} />
     </div>
@@ -73,7 +72,7 @@ function Directory() {
       <figure><img src={asset('diagnostics.webp')} alt="Диагностическое оборудование из материалов клиники" width={640} height={480} /><figcaption>Услуги и цены <span>КСМ · Казань</span></figcaption></figure>
     </section>
     <section id="catalog" className="svc-catalog" aria-labelledby="catalog-title">
-      <div className="svc-catalog-heading"><h2 id="catalog-title">Услуги и цены</h2><a className="text-link" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Прайс клиники <ArrowUpRight /></a></div>
+      <div className="svc-catalog-heading"><h2 id="catalog-title">Услуги и цены</h2><a className="text-link" href={clinic.priceListUrl}>Цены по направлениям <ArrowUpRight /></a></div>
       <div className="svc-search"><MagnifyingGlass aria-hidden="true" /><label className="svc-sr" htmlFor="service-search">Поиск услуг</label><input id="service-search" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Например, репродуктолог или УЗИ" autoComplete="off" />{query && <button className="icon-button" aria-label="Очистить поиск" onClick={() => { setQuery(''); document.getElementById('service-search')?.focus() }}><X /></button>}</div>
       <div className="svc-catalog-layout">
         <div className="svc-sidebar"><nav className="svc-categories" aria-label="Направления услуг">{[{ id: 'all', title: 'Все направления' }, ...serviceCategories].map(item => <button key={item.id} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}>{item.title}<span>{matches.filter(service => item.id === 'all' || service.categoryId === item.id).length}</span></button>)}</nav><div className="svc-sidebar-note"><p>Первый раз в клинике?</p><a href={serviceHref('reproductologist-first')}>О первом приёме <ArrowUpRight size={18} /></a></div></div>

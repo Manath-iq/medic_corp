@@ -23,7 +23,11 @@ if git('status', '--porcelain', '--untracked-files=no').strip():
     raise SystemExit('Commit source changes before publishing a build.')
 
 dist = ROOT / 'dist'
-paths = [dist / 'index.html', dist / 'specialists/index.html', dist / 'services/index.html', dist / 'about/index.html', dist / 'patients/index.html', dist / 'oms/index.html']
+paths = [dist / entry for entry in (
+    'index.html', 'specialists/index.html', 'services/index.html', 'prices/index.html',
+    'offers/index.html', 'oms/index.html', 'patients/index.html', 'about/index.html',
+    'contacts/index.html',
+)]
 paths.extend(path for path in (dist / 'assets').glob('*') if path.is_file() and path.suffix in {'.js', '.css', '.woff2', '.webp', '.png', '.avif'})
 public = git('ls-files', '-z', 'public').decode().split('\0')
 paths.extend(dist / name.removeprefix('public/') for name in public if name)

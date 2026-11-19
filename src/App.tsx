@@ -13,8 +13,6 @@ import { media } from './media'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const newsUrl = 'https://ksm-eko.ru/index.php/novosti-i-akcii'
-
 export default function App() {
   const root = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
@@ -62,14 +60,14 @@ export default function App() {
       <section id="offers" className="container offers-section">
         <div className="offers-strip">
           <h2>Акции и скидки</h2>
-          <a className="button button-outline" href={clinic.phoneHref}>Уточнить скидки <Phone /></a>
+          <a className="button button-outline" href={clinic.offersUrl}>Посмотреть акции <ArrowUpRight /></a>
         </div>
       </section>
 
       <DirectionFan />
 
       <section id="prices" className="container compact-prices">
-        <div className="compact-heading"><h2>Цены на консультации</h2><a className="text-link" href={clinic.pricesUrl} target="_blank" rel="noreferrer">Полный прайс <ArrowUpRight /></a></div>
+        <div className="compact-heading"><h2>Цены на консультации</h2><a className="text-link" href={clinic.priceListUrl}>Цены по направлениям <ArrowUpRight /></a></div>
         <ul className="consultations">{prices.map(price => <li key={price.name}>
           <h3>{price.name}</h3><p>{price.note}</p><strong>{rubles(price.amount)}</strong>
         </li>)}</ul>
@@ -103,9 +101,9 @@ export default function App() {
       <LocationSection />
       <section id="news" className="news-section">
         <div className="container">
-          <div className="compact-heading"><h2>Новости</h2><a className="text-link" href={newsUrl} target="_blank" rel="noreferrer">Все новости <ArrowUpRight /></a></div>
+          <div className="compact-heading"><h2>Новости</h2><a className="text-link" href={clinic.offersUrl}>Акции и объявления <ArrowUpRight /></a></div>
           <div className="news-grid">
-            <a className="news-item" href={newsUrl + '/priglashaem-stat-donorami-ootsitov'} target="_blank" rel="noreferrer"><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
+            <a className="news-item" href={clinic.offersUrl + '#announcements'}><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
             <a className="news-item" href={clinic.firstVisitUrl}><small>Первый приём</small><span>Как проходит первое знакомство с репродуктологом <ArrowUpRight /></span></a>
             <a className="news-item" href={clinic.preparationUrl}><small>Подготовка к обследованиям</small><span>Памятка перед визитом на обследование <ArrowUpRight /></span></a>
           </div>

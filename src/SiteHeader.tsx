@@ -4,11 +4,16 @@ import { asset, clinic } from './data'
 import { specialistsHref } from './specialist-links'
 import { servicesHref } from './services-links'
 
-const nav = [[clinic.informationUrl, 'О клинике'], ['#offers', 'Акции'], [servicesHref, 'Услуги'], ['#prices', 'Цены'], [specialistsHref, 'Специалисты'], [clinic.patientUrl, 'Пациентам'], [clinic.omsUrl, 'ЭКО по ОМС'], ['#location', 'Контакты']]
+const nav = [
+  [specialistsHref, 'Специалисты'], [servicesHref, 'Услуги'],
+  [clinic.priceListUrl, 'Цены'], [clinic.offersUrl, 'Акции'],
+  [clinic.omsUrl, 'ЭКО по ОМС'], [clinic.patientUrl, 'Пациентам'],
+  [clinic.informationUrl, 'О клинике'], [clinic.contactsUrl, 'Контакты'],
+]
 
 export default function SiteHeader({ home = '' }: { home?: string }) {
   const currentPage = window.location.pathname
-  const isCurrent = (href: string) => !href.startsWith('#') && currentPage === href
+  const isCurrent = (href: string) => currentPage.replace(/index\.html$/, '').replace(/\/$/, '') === href.replace(/\/$/, '')
   const root = useRef<HTMLElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)
   const mobileNav = useRef<HTMLElement>(null)
@@ -45,15 +50,9 @@ export default function SiteHeader({ home = '' }: { home?: string }) {
           <span className="brand-symbol"><img src={asset('logo-small.webp')} alt="КСМ" width={156} height={156} /></span>
           <span>Клиника<br />семейной медицины</span>
         </a>
-        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href.startsWith('#') ? home + href : href}>{label}</a>)}</nav>
+        <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href}>{label}</a>)}</nav>
         <div className="nav-actions"><a className="nav-phone" href={clinic.phoneHref}>{clinic.phone}</a><a className="button button-primary button-small" href={home + '#contact'}>Первый приём <ArrowUpRight /></a><button ref={menuButton} className="menu-toggle icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}>{menuOpen ? <X /> : <List />}</button></div>
       </div>
-      {menuOpen && <nav ref={mobileNav} id="mobile-nav" className="mobile-nav" aria-label="Мобильная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href.startsWith('#') ? home + href : href} onClick={() => {
-        setMenuOpen(false)
-        // Keep keyboard navigation at the chosen section after removing its link.
-        if (home || !href.startsWith('#')) return
-        const section = document.querySelector<HTMLElement>(href)
-        if (section) { section.tabIndex = -1; section.focus({ preventScroll: true }) }
-      }}>{label}<ArrowUpRight /></a>)}<a href={clinic.phoneHref}>{clinic.phone}<Phone /></a></nav>}
+      {menuOpen && <nav ref={mobileNav} id="mobile-nav" className="mobile-nav" aria-label="Мобильная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href} onClick={() => setMenuOpen(false)}>{label}<ArrowUpRight /></a>)}<a href={clinic.phoneHref}>{clinic.phone}<Phone /></a></nav>}
     </header>
 }

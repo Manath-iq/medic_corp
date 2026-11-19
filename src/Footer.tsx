@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react'
+import { ArrowUpRight } from '@phosphor-icons/react'
 import { asset, clinic } from './data'
 
 const home = import.meta.env.BASE_URL
@@ -16,7 +16,7 @@ export default function Footer() {
           <a className="footer-phone" href={clinic.phoneHref}>
             {clinic.phone}
           </a>
-          <a className="text-link" href={home + '#location'}>{clinic.address} <ArrowUpRight /></a>
+          <a className="text-link" href={clinic.contactsUrl}>{clinic.address} <ArrowUpRight /></a>
         </div>
         <nav className="footer-patient-links" aria-label="Информация пациентам">
           <h2>Пациентам</h2>
@@ -25,7 +25,7 @@ export default function Footer() {
           <a href={clinic.preparationUrl}>Подготовка к исследованиям <ArrowUpRight /></a>
           <a href={clinic.omsUrl}>ЭКО по ОМС <ArrowUpRight /></a>
           <a href={home + '#faq'}>Вопросы и ответы <ArrowUpRight /></a>
-          <a href={clinic.website} target="_blank" rel="noreferrer">ksm-eko.ru <ArrowRight /></a>
+          <a href={clinic.contactsUrl}>Контакты клиники <ArrowUpRight /></a>
         </nav>
       </div>
       <div className="footer-bottom">

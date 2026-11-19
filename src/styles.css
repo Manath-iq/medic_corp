@@ -565,7 +565,7 @@ svg { flex-shrink: 0; }
 }
 
 /* Identify the current section with shape and text, as well as color. */
-.desktop-nav a[aria-current=page], .mobile-nav a[aria-current=page] { background: var(--surface-2); color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.desktop-nav a[aria-current=page], .mobile-nav a[aria-current=page] { background: var(--forest-soft); color: var(--forest); text-decoration: underline; text-underline-offset: 4px; }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .doctor-card a:hover img { transform: scale(1.03); }

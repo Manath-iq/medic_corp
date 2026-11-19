@@ -1,3 +1,4 @@
+import { rubles } from './data'
 import catalog from './services.json'
 
 export type Service = {
@@ -17,3 +18,5 @@ export type Service = {
 }
 export const services: Service[] = catalog.services
 export const serviceCategories = catalog.categories
+
+export const priceLabel = (service: Service) => service.price.kind === 'oms' ? 'По программе ОМС' : service.price.amount === null ? 'Уточнить стоимость' : rubles(service.price.amount)

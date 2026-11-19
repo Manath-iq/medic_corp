@@ -53,7 +53,7 @@ function Directory() {
         <span role="status">Найдено: {visible.length}</span>
       </div>
       <div className="team-grid">{visible.map(doctor => <DoctorCard doctor={doctor} href={specialistHref(doctor.id, filter.id)} key={doctor.id} />)}</div>
-      <div className="team-directory-end"><a className="text-link" href="https://ksm-eko.ru/index.php/home/specialisty">Полный список сотрудников на сайте КСМ <ArrowUpRight /></a><a className="text-link" href={prodoctorov}>Отзывы о клинике на ПроДокторов <ArrowUpRight /></a></div>
+      <div className="team-directory-end"><a className="text-link" href={clinic.informationUrl + '#team'}>Сотрудники клиники <ArrowUpRight /></a><a className="text-link" href={prodoctorov}>Отзывы о клинике на ПроДокторов <ArrowUpRight /></a></div>
     </section>
   </>
 }
@@ -89,13 +89,12 @@ function Profile({ doctor }: { doctor: Doctor }) {
           {doctor.education.length ? <ul className="team-credentials">{doctor.education.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
           <h3>Аккредитация и допуск к работе</h3>
           {doctor.accreditation.length ? <ul className="team-credentials">{doctor.accreditation.map(item => <li key={item}>{item}</li>)}</ul> : <p>Сведения уточняются у клиники.</p>}
-          <a className="text-link" href={doctor.url}>Источник на сайте КСМ <ArrowUpRight /></a>
         </section>
         <section className="team-panel">
           <h2>Цена по направлениям</h2>
           <p>Стоимость по прайсу клиники. Возможность записи на конкретную услугу уточните в регистратуре.</p>
           <ul className="team-prices">{services.map(service => <li key={service.name}><div><strong>{service.name}</strong><span>{service.note}</span></div><b>{rubles(service.amount)}</b></li>)}</ul>
-          <a className="text-link" href={clinic.pricesUrl}>Полный прайс КСМ <ArrowUpRight /></a>
+          <a className="text-link" href={clinic.priceListUrl}>Цены по направлениям <ArrowUpRight /></a>
         </section>
       </div>
       <aside ref={appointment} id="appointment" tabIndex={-1} className="team-appointment" aria-labelledby="appointment-title">
