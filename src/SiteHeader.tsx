@@ -6,7 +6,7 @@ import { servicesHref } from './services-links'
 
 const nav = [
   [specialistsHref, 'Специалисты'], [servicesHref, 'Услуги'],
-  [clinic.priceListUrl, 'Цены'], [clinic.offersUrl, 'Акции'],
+  [clinic.offersUrl, 'Акции'],
   [clinic.omsUrl, 'ЭКО по ОМС'], [clinic.patientUrl, 'Пациентам'],
   [clinic.informationUrl, 'О клинике'], [clinic.contactsUrl, 'Контакты'],
 ]

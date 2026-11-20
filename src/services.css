@@ -46,10 +46,6 @@
 .svc-row-arrow { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--bg); }
 .svc-row:focus-visible { outline-offset: -4px; background: var(--forest-soft); }
 .svc-catalog-note,.svc-price-note { color: var(--muted); font-size: 12px; line-height: 1.7; }
-.svc-help { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; margin-block: 80px; }
-.svc-help > div { padding-left: 30px; }
-.svc-help h2 { font-size: clamp(32px,3.6vw,46px); }
-.svc-help > div > p { margin-top: 22px; max-width: 37ch; font-size: 14px; color: var(--muted); }
 .svc-appointment { padding: 34px; background: var(--dark); color: white; border-radius: 24px; }
 .svc-appointment .svc-small { margin-bottom: 12px; color: var(--on-dark-muted); }
 .svc-appointment h2 { font-size: 30px; margin-bottom: 14px; }
@@ -100,8 +96,6 @@
   .svc-catalog-layout { grid-template-columns: 210px minmax(0,1fr); gap: 20px; }
   .svc-row { grid-template-columns: minmax(0,1fr) auto; gap: 14px; padding: 20px; }
   .svc-row-arrow { display: none; }
-  .svc-help { gap: 24px; }
-  .svc-help > div { padding-left: 0; }
   .svc-detail-layout { grid-template-columns: minmax(0,1fr) 300px; gap: 16px; }
   .svc-appointment { padding: 26px; }
 }
@@ -132,9 +126,6 @@
   .svc-row h4 { font-size: 16px; }
   .svc-row > strong { font-size: 14px; }
   .svc-row-arrow { display: grid; width: 32px; height: 32px; }
-  .svc-help { grid-template-columns: 1fr; gap: 28px; margin-block: 52px; }
-  .svc-help > div { padding-inline: 8px; }
-  .svc-help h2 { font-size: 34px; }
   .svc-faq { grid-template-columns: 1fr; gap: 24px; padding-bottom: 40px; }
   .svc-faq h2 { font-size: 30px; }
   .svc-detail-heading { padding-top: 16px; }
@@ -147,3 +138,8 @@
   .svc-empty { padding: 26px; }
 }
 @media (prefers-reduced-motion:reduce) { .svc-row { transition: none; } }
+
+.svc-help { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; margin-block: clamp(36px, 5vw, 72px); padding: clamp(24px, 4vw, 52px); background: var(--forest-soft); border-radius: var(--r-card); }
+.svc-help h2 { font-size: clamp(26px, 3vw, 40px); }
+.svc-help p { margin-top: 8px; max-width: 52ch; color: var(--muted); }
+#full-list { scroll-margin-top: 110px; }

@@ -8,7 +8,7 @@ import SiteHeader from './SiteHeader'
 import Footer from './Footer'
 import { clinic } from './data'
 import { yandexClinic } from './yandex'
-import { services, serviceCategories, priceLabel } from './services-data'
+import { services } from './services-data'
 import { serviceHref } from './services-links'
 
 const home = import.meta.env.BASE_URL
@@ -76,14 +76,6 @@ const oms: Section[] = [
     ['АК БАРС-Мед', <a href="tel:88005000303">8 800 500-03-03</a>], ['СМО «Спасение»', <a href="tel:88001000717">8 800 100-07-17</a>], ['Чулпан-Мед', <a href="tel:88002001065">8 800 200-10-65</a>],
   ]}/><p>Участие вашей страховой организации по действующему договору можно уточнить в КСМ по телефону {phone}.</p></>],
 ]
-const prices: Section[] = serviceCategories.map(category => [
-  category.id, category.title,
-  <ul className="info-price-list">{services.filter(service => service.categoryId === category.id).map(service =>
-    <li key={service.id}><a href={serviceHref(service.id)}><span>{service.title}</span><strong>{priceLabel(service)}</strong></a></li>
-  )}</ul>,
-])
-prices.push(['full-list', 'Полный прайс клиники', <><p>Здесь собраны основные услуги. Остальные позиции можно найти в полном прайсе КСМ. Итоговую стоимость уточняйте при записи.</p><Links items={[['Открыть полный прайс (PDF)', pdf + 'prais-06-04-26-ksm-v1.pdf']]} /></>])
-
 const offers: Section[] = [
   ['discounts', 'Скидки на услуги', <><p>Уточните в регистратуре, действует ли скидка на нужную услугу в день вашего визита.</p><Links items={[[clinic.phone, clinic.phoneHref], ['Посмотреть цены на услуги', clinic.priceListUrl]]} /></>],
   ['announcements', 'Приглашаем доноров ооцитов', <><p>По вопросам участия в донорской программе можно обратиться к ведущему эмбриологу Елене Андреевне Жиряевой.</p><Links items={[['Позвонить по вопросам донорства · +7 (987) 415-53-80', 'tel:+79874155380']]} /></>],
@@ -93,7 +85,6 @@ const contacts: Section[] = [
   ['route', 'Как добраться', <><p>В Яндекс Картах здание обозначено как {yandexClinic.mapAddress}.</p><Links items={[['Построить маршрут', yandexClinic.routeUrl], ['Открыть клинику на карте', yandexClinic.url]]} /></>],
 ]
 const pages = {
-  prices: { title: 'Цены', lead: 'Выберите направление, чтобы сравнить стоимость. В карточке каждой услуги указан состав приёма или исследования.', sections: prices },
   offers: { title: 'Акции', lead: 'Информация о скидках и объявления Клиники семейной медицины.', sections: offers },
   contacts: { title: 'Контакты', lead: 'Телефоны для записи, часы работы и маршрут до клиники в Казани.', sections: contacts },
   about: { title: 'О клинике и лицензия', lead: 'Контакты клиники, приём у руководителя и документы на медицинскую деятельность.', sections: about },
@@ -102,12 +93,23 @@ const pages = {
 }
 function Information({ page }: { page: typeof pages.about }) {
   useLayoutEffect(() => {
-    if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'instant' })
+    const reveal = () => {
+      const target = document.getElementById(location.hash.slice(1))
+      if (target instanceof HTMLDetailsElement) target.open = true
+      target?.scrollIntoView({ behavior: 'instant' })
+    }
+    reveal()
+    window.addEventListener('hashchange', reveal)
+    return () => window.removeEventListener('hashchange', reveal)
   }, [])
-  return <><a className="skip-link" href="#main">Перейти к содержимому</a><SiteHeader home={home} /><main className="info-page container" id="main">
-    <header className="info-intro"><a href={home}>← Главная</a><h1>{page.title}</h1><p>{page.lead}</p></header>
-    <div className="info-layout"><aside><nav aria-label="На этой странице">{page.sections.map(([id, title]) => <a key={id} href={'#'+id}>{title}</a>)}</nav><a className="button button-primary" href={clinic.phoneHref}><Phone />Регистратура</a></aside>
-    <div className="info-content">{page.sections.map(([id, title, body]) => <section key={id} id={id}><h2>{title}</h2>{body}</section>)}</div></div>
+  return <><a className="skip-link" href="#main">Перейти к содержимому</a><SiteHeader home={home} /><main className={'info-page container' + (page === pages.offers ? ' info-offers' : '')} id="main">
+    <header className={'info-intro' + (page === pages.about ? ' about-intro' : '')}><div><a href={home}>← Главная</a><h1>{page.title}</h1><p>{page.lead}</p></div>{page === pages.about && <figure><img src={home + 'assets/clinic/reception.webp'} width="675" height="900" alt="Стойка регистратуры с вывеской Клиники семейной медицины" /><figcaption>Регистратура КСМ · Казань, Зур Урам, 33</figcaption></figure>}</header>
+    {page === pages.patients ? <div className="patient-guide info-content">
+      {patients.map(([id, title, body], index) => <details key={id} id={id} open={index === 0 || undefined}>
+        <summary><h2>{title}</h2><span aria-hidden="true">+</span></summary><div className="patient-answer">{body}</div>
+      </details>)}
+    </div> : <div className="info-layout"><aside><nav aria-label="На этой странице">{page.sections.map(([id, title]) => <a key={id} href={'#'+id}>{title}</a>)}</nav><a className="button button-primary" href={clinic.phoneHref}><Phone />Регистратура</a></aside>
+    <div className="info-content">{page.sections.map(([id, title, body]) => <section key={id} id={id}><h2>{title}</h2>{body}</section>)}</div></div>}
   </main><Footer /></>
 }
 const root = document.getElementById('root')!
