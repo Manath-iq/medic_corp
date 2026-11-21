@@ -5,21 +5,51 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "cms": "next dev cms --hostname 127.0.0.1 --port 3001",
+    "cms:types": "PAYLOAD_CONFIG_PATH=cms/payload.config.ts payload generate:types",
+    "cms:importmap": "PAYLOAD_CONFIG_PATH=cms/payload.config.ts payload generate:importmap",
+    "cms:build": "next build cms",
+    "cms:seed": "node --env-file-if-exists=cms/.env.local --import tsx cms/seed.ts",
+    "local": "node scripts/local.mjs",
+    "cms:backup": "node scripts/backup-cms.mjs",
+    "test:cms": "node --import tsx scripts/test-cms.ts",
+    "test:cms:browser": "node scripts/verify-cms.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "5.3.0",
+    "@payloadcms/db-sqlite": "3.93.0",
+    "@payloadcms/next": "3.93.0",
+    "@payloadcms/richtext-lexical": "3.93.0",
+    "@payloadcms/translations": "3.93.0",
     "@phosphor-icons/react": "2.1.10",
+    "graphql": "^16.15.0",
     "gsap": "3.15.1",
+    "next": "16.4.6",
+    "payload": "3.93.0",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "sharp": "^0.35.5"
+  },
+  "overrides": {
+    "happy-dom": "21.0.4",
+    "dompurify": "3.4.18",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    }
+  },
+  "engines": {
+    "node": "^22.23.4 || >=24.22.1"
   },
   "devDependencies": {
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.3.0",
+    "axe-core": "^4.14.1",
+    "playwright-core": "^1.65.1",
+    "tsx": "^4.23.15",
     "typescript": "7.0.2",
     "vite": "8.3.8"
   }

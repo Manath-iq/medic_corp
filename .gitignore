@@ -21,3 +21,9 @@ test-results/
 /design/image-originals/
 /design/image-candidates/
 /design/image-contact-sheet.jpg
+cms/.env*
+!cms/.env.example
+cms/.next/
+cms/data/
+cms/uploads/
+cms/*.tsbuildinfo

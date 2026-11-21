@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom/client'
 import '@fontsource-variable/manrope'
 import './styles.css'
 import './specialists.css'
-import Specialists from './Specialists'
-import { specialists } from './data'
+import { boot } from './content'
 
+void boot(async () => {
+const { default: Specialists } = await import('./Specialists')
+const { specialists } = await import('./data')
 const id = new URLSearchParams(window.location.search).get('doctor')
 const doctor = specialists.find(item => item.id === id)
 if (id && !doctor) document.title = 'Специалист не найден | КСМ'
@@ -16,3 +18,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Specialists doctor={doctor} missing={Boolean(id && !doctor)} />
   </React.StrictMode>,
 )
+})

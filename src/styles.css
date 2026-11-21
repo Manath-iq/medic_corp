@@ -584,3 +584,12 @@ svg { flex-shrink: 0; }
   .button:hover { transform: translateY(-2px); }
   .button:active { transform: translateY(0); }
 }
+/* Shared content states used by the locally managed website. */
+.doctor-placeholder { display: grid; place-items: center; width: 100%; height: 100%; min-height: 240px; background: #e7ddce; color: #2f5683; font-size: 52px; }
+.svc-price-variants { list-style: none; padding: 0; }
+.svc-price-variants li { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid currentColor; }
+.preserve-lines { white-space: pre-line; }
+.cms-preview-banner { padding: 10px 20px; background: #172e50; color: white; position: relative; z-index: 1000; text-align: center; font: 13px/1.6 sans-serif; }
+.cms-preview .site-header { top: 48px; }
+.cms-load-error { max-width: 600px; padding: 32px; margin: 15vh auto; font-family: sans-serif; line-height: 1.6; }
+.cms-load-error button { padding: 12px 20px; border: 0; border-radius: 8px; background: #2f5683; color: white; cursor: pointer; }

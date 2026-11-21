@@ -1,5 +1,6 @@
 import { rubles } from './data'
 import catalog from './services.json'
+import { siteContent } from './content'
 
 export type Service = {
   id: string
@@ -15,8 +16,12 @@ export type Service = {
   sourceUrl: string
   verifiedAt: string
   contentStatus: string
+  showOnHome?: boolean
+  priceItems?: { id: string; title: string; amount: number | null; currency: string; kind: string; note: string; variant: string; sourceCode: string; specialistId: string }[]
+  seoTitle?: string
+  seoDescription?: string
 }
-export const services: Service[] = catalog.services
-export const serviceCategories = catalog.categories
+export const services: Service[] = siteContent()?.services ?? catalog.services
+export const serviceCategories = siteContent()?.directions.map(d => ({ id: d.id, title: d.title, description: d.description })) ?? catalog.categories
 
-export const priceLabel = (service: Service) => service.price.kind === 'oms' ? 'По программе ОМС' : service.price.amount === null ? 'Уточнить стоимость' : rubles(service.price.amount)
+export const priceLabel = (service: Pick<Service, 'price'>) => service.price.kind === 'oms' ? 'По программе ОМС' : service.price.amount === null ? 'Уточнить стоимость' : `${service.price.kind === 'from' ? 'от ' : ''}${rubles(service.price.amount)}`

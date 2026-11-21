@@ -7,6 +7,7 @@ import { specialistHref } from './specialist-links'
 import { priceLabel, serviceCategories, services } from './services-data'
 import { categoryHref, serviceHref, servicesHref } from './services-links'
 import type { Service } from './services-data'
+import { siteContent, safeHref } from './content'
 
 const home = import.meta.env.BASE_URL
 const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim()
@@ -16,9 +17,10 @@ function Appointment({ service }: { service: Service }) {
     <span className="svc-small">{service.price.kind === 'oms' ? 'Условия программы' : 'Стоимость услуги'}</span>
     <h2>{priceLabel(service)}</h2>
     <p>{service.price.note}</p>
+    {service.priceItems && service.priceItems.length > 1 && <ul className="svc-price-variants">{service.priceItems.map(p => <li key={p.id}><span>{p.title}{p.variant && ` · ${p.variant}`}</span><strong>{priceLabel({ price: p })}</strong></li>)}</ul>}
     <a className="button svc-call" href={clinic.phoneHref}><Phone />Позвонить и записаться</a>
     <a className="svc-phone" href={clinic.phoneHref}>{clinic.phone}</a>
-    <div className="svc-address"><span>Клиника семейной медицины</span><a href={clinic.contactsUrl}>{clinic.address} <ArrowUpRight size={16} /></a></div>
+    <div className="svc-address"><span>{clinic.name}</span><a href={clinic.contactsUrl}>{clinic.address} <ArrowUpRight size={16} /></a></div>
   </aside>
 }
 
@@ -41,6 +43,7 @@ function Details({ service, back }: { service: Service; back: string }) {
 }
 
 function Directory() {
+  const managedFaq = siteContent()?.faq.filter(q => q.placement.includes('services'))
   const initial = new URLSearchParams(window.location.search)
   const [category, setCategory] = useState(serviceCategories.some(item => item.id === initial.get('category')) ? initial.get('category')! : 'all')
   const [query, setQuery] = useState(initial.get('q') || '')
@@ -75,7 +78,7 @@ function Directory() {
       <figure><img src={asset('diagnostics.webp')} alt="Диагностическое оборудование из материалов клиники" width={640} height={480} /><figcaption>Услуги и цены <span>КСМ · Казань</span></figcaption></figure>
     </section>
     <section id="catalog" className="svc-catalog" aria-labelledby="catalog-title">
-      <div className="svc-catalog-heading"><h2 id="catalog-title">Услуги и цены</h2><a className="text-link" id="full-list" href={home + 'documents/prais-06-04-26-ksm-v1.pdf'}>Полный прайс (PDF) <ArrowUpRight /></a></div>
+      <div className="svc-catalog-heading"><h2 id="catalog-title">Услуги и цены</h2>{(!siteContent() || siteContent()?.clinic.priceDocumentUrl) && <a className="text-link" id="full-list" href={safeHref(siteContent()?.clinic.priceDocumentUrl || home + 'documents/prais-06-04-26-ksm-v1.pdf')}>Полный прайс (PDF) <ArrowUpRight /></a>}</div>
       <div className="svc-search"><MagnifyingGlass aria-hidden="true" /><label className="svc-sr" htmlFor="service-search">Поиск услуг</label><input id="service-search" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Например, репродуктолог или УЗИ" autoComplete="off" />{query && <button className="icon-button" aria-label="Очистить поиск" onClick={() => { setQuery(''); document.getElementById('service-search')?.focus() }}><X /></button>}</div>
       <div className="svc-catalog-layout">
         <div className="svc-sidebar"><nav className="svc-categories" aria-label="Направления услуг">{[{ id: 'all', title: 'Все направления' }, ...serviceCategories].map(item => <button key={item.id} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}>{item.title}<span>{matches.filter(service => item.id === 'all' || service.categoryId === item.id).length}</span></button>)}</nav><div className="svc-sidebar-note"><p>Первый раз в клинике?</p><a href={serviceHref('reproductologist-first')}>О первом приёме <ArrowUpRight size={18} /></a></div></div>
@@ -87,7 +90,7 @@ function Directory() {
       </div>
     </section>
     <section className="svc-help"><div><h2>Помочь выбрать услугу?</h2><p>Администратор подскажет, к кому записаться, и подберёт время приёма.</p></div><a className="button button-primary" href={clinic.phoneHref}><Phone />{clinic.phone}</a></section>
-    <section className="svc-faq"><h2>Перед записью</h2><div><details><summary>Можно записаться сразу на исследование?</summary><p>Позвоните в регистратуру и назовите исследование. Администратор уточнит порядок записи и подготовку. Необходимость обследования обсуждается с врачом.</p></details><details><summary>Все услуги входят в указанную стоимость?</summary><p>В карточке указан состав конкретной позиции. Дополнительные консультации и исследования могут оплачиваться отдельно. Итоговую стоимость уточните до визита.</p></details><details><summary>Где узнать об ЭКО по ОМС?</summary><p>Условия программы и порядок обращения опубликованы на сайте клиники.</p><a className="text-link" href={clinic.omsUrl}>Об ЭКО по ОМС <ArrowUpRight /></a></details></div></section>
+    {managedFaq ? managedFaq.length > 0 && <section className="svc-faq"><h2>Перед записью</h2><div>{managedFaq.map(q => <details key={q.id}><summary>{q.question}</summary><p>{q.answer}</p>{q.href && <a className="text-link" href={safeHref(q.href)}>{q.label}<ArrowUpRight /></a>}</details>)}</div></section> : <section className="svc-faq"><h2>Перед записью</h2><div><details><summary>Можно записаться сразу на исследование?</summary><p>Позвоните в регистратуру и назовите исследование. Администратор уточнит порядок записи и подготовку. Необходимость обследования обсуждается с врачом.</p></details><details><summary>Все услуги входят в указанную стоимость?</summary><p>В карточке указан состав конкретной позиции. Дополнительные консультации и исследования могут оплачиваться отдельно. Итоговую стоимость уточните до визита.</p></details><details><summary>Где узнать об ЭКО по ОМС?</summary><p>Условия программы и порядок обращения опубликованы на сайте клиники.</p><a className="text-link" href={clinic.omsUrl}>Об ЭКО по ОМС <ArrowUpRight /></a></details></div></section>}
   </>
 }
 
@@ -97,6 +100,6 @@ export default function Services() {
   const service = services.find(item => item.id === id)
   params.delete('service')
   const back = servicesHref + (params.size ? '?' + params.toString() : '')
-  useEffect(() => { document.title = service ? `${service.title} | КСМ, Казань` : id ? 'Услуга не найдена | КСМ' : 'Услуги и цены | КСМ, Казань' }, [id, service])
+  useEffect(() => { document.title = service ? service.seoTitle || `${service.title} | ${clinic.name}` : id ? 'Услуга не найдена | КСМ' : 'Услуги и цены | КСМ, Казань'; const el = document.querySelector('meta[name="description"]'); if (el && service) el.setAttribute('content', service.seoDescription || service.summary) }, [id, service])
   return <div className="svc-page"><a className="skip-link" href="#main">Перейти к содержимому</a><SiteHeader home={home} /><main id="main" className="svc-shell">{id ? service ? <Details service={service} back={back} /> : <section className="svc-empty"><h1>Услуга не найдена</h1><p>Возможно, ссылка изменилась. Выберите услугу в каталоге.</p><a className="button button-primary" href={servicesHref}>Все услуги</a></section> : <Directory />}</main><Footer /></div>
 }

@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { asset, clinic, firstSteps, omsRoutes, questions } from './data'
 import { media } from './media'
+import { safeHref, siteContent } from './content'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -114,12 +115,14 @@ export function AboutSection() {
 }
 
 export function FaqSection() {
+  const faqs = siteContent()?.faq.filter(q => q.placement.includes('home')) ?? questions
+  if (!faqs.length) return null
   return <section id="faq" className="faq-section section container" aria-labelledby="faq-title">
     <div className="faq-layout">
       <div className="faq-intro" data-reveal><h2 id="faq-title">Вопросы перед визитом</h2></div>
-      <div className="faq-list">{questions.map((item, index) => <details className="faq-item" name="clinic-faq" key={item.id}>
+      <div className="faq-list">{faqs.map((item, index) => <details className="faq-item" name="clinic-faq" key={item.id}>
         <summary><span className="faq-number" aria-hidden="true">0{index + 1}</span><span className="faq-question">{item.question}</span><Plus aria-hidden="true" /></summary>
-        <div className="faq-answer"><p>{item.answer}</p><a className="text-link" href={item.href} {...(item.href.startsWith('https:') ? { target: '_blank', rel: 'noreferrer' } : {})}>{item.label}<ArrowUpRight /></a></div>
+        <div className="faq-answer"><p>{item.answer}</p>{item.href && <a className="text-link" href={safeHref(item.href)} {...(item.href.startsWith('https:') ? { target: '_blank', rel: 'noreferrer' } : {})}>{item.label}<ArrowUpRight /></a>}</div>
       </details>)}</div>
     </div>
   </section>

@@ -10,7 +10,7 @@ const generated = import.meta.glob<string>('./assets/generated/*.{webp,png,jpg,a
 export type MediaSlot = keyof typeof mediaSlots
 
 export function media(slot: MediaSlot) {
-  const [name, fallback] = mediaSlots[slot]
+  const [name, fallback] = mediaSlots[slot] || mediaSlots.hero
   for (const extension of mediaExtensions) {
     const image = generated[`./assets/generated/${name}.${extension}`]
     if (image) return { src: image, generated: true }

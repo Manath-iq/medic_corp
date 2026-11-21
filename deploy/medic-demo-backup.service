@@ -1,0 +1,9 @@
+[Unit]
+Description=Consistent backup of clinic demo database and uploads
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /opt/medic-demo/app/deploy/backup.sh
+TimeoutStartSec=10min

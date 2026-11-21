@@ -8,7 +8,7 @@ export default function Footer() {
     <div className="container">
       <a className="footer-home" href={home + '#main'} aria-label="Клиника семейной медицины, на главную">
         <img src={asset('logo-small.webp')} width="52" height="52" alt="" />
-        <span>Клиника<br />семейной медицины</span>
+        <span>{clinic.name}</span>
       </a>
       <div className="footer-directory">
         <div className="footer-contacts">
@@ -29,8 +29,8 @@ export default function Footer() {
         </nav>
       </div>
       <div className="footer-bottom">
-        <p>Имеются противопоказания.<br />Необходима консультация специалиста.</p>
-        <span>КСМ · 2026</span>
+        <p>{clinic.warning}</p>
+        <span>КСМ · {new Date().getFullYear()}</span>
       </div>
     </div>
   </footer>

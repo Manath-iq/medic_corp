@@ -3,12 +3,14 @@ import { ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
 import { asset, clinic } from './data'
 import { specialistsHref } from './specialist-links'
 import { servicesHref } from './services-links'
+import { cmsEnabled } from './content'
 
 const nav = [
   [specialistsHref, 'Специалисты'], [servicesHref, 'Услуги'],
   [clinic.offersUrl, 'Акции'],
   [clinic.omsUrl, 'ЭКО по ОМС'], [clinic.patientUrl, 'Пациентам'],
   [clinic.informationUrl, 'О клинике'], [clinic.contactsUrl, 'Контакты'],
+  ...(cmsEnabled ? [[clinic.newsUrl, 'Новости']] : []),
 ]
 
 export default function SiteHeader({ home = '' }: { home?: string }) {
@@ -48,7 +50,7 @@ export default function SiteHeader({ home = '' }: { home?: string }) {
       <div className="nav-bar">
         <a href={home + '#main'} className="brand" aria-label="Клиника семейной медицины, на главную">
           <span className="brand-symbol"><img src={asset('logo-small.webp')} alt="КСМ" width={156} height={156} /></span>
-          <span>Клиника<br />семейной медицины</span>
+          <span>{clinic.name}</span>
         </a>
         <nav className="desktop-nav" aria-label="Основная навигация">{nav.map(([href, label]) => <a key={href} aria-current={isCurrent(href) ? 'page' : undefined} href={href}>{label}</a>)}</nav>
         <div className="nav-actions"><a className="nav-phone" href={clinic.phoneHref}>{clinic.phone}</a><a className="button button-primary button-small" href={home + '#contact'}>Первый приём <ArrowUpRight /></a><button ref={menuButton} className="menu-toggle icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}>{menuOpen ? <X /> : <List />}</button></div>

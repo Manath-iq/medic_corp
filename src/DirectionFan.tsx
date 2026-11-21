@@ -9,6 +9,10 @@ import type { MediaSlot } from './media'
 // Arc/rotation vocabulary adapted from the user's DENTIS fan-carousel.js.
 // No cloned focus targets, autoplay, perpetual frame loop, or hidden unique copy.
 export default function DirectionFan() {
+  if (!directions.length) return null
+  return <DirectionFanContent />
+}
+function DirectionFanContent() {
   const [center, setCenter] = useState(0)
   const [drag, setDrag] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -140,7 +144,7 @@ export default function DirectionFan() {
             zIndex: 100 - Math.round(absolute * 10),
           } as CSSProperties
           return <li key={slot} data-direction-index={index} className={`direction-card ${slot === center ? 'is-current' : ''}`} style={cardStyle} aria-hidden={absolute > 2.5}>
-            <img src={media(direction.id as MediaSlot).src} alt="" width={450} height={675} loading="lazy" fetchPriority="low" draggable={false} />
+            <img src={/^https?:/.test(direction.image) ? direction.image : media(direction.id as MediaSlot).src} alt="" width={450} height={675} loading="lazy" fetchPriority="low" draggable={false} />
             <span className="direction-label">{direction.name}</span>
             <span className="direction-select" aria-hidden="true"><ArrowUpRight /></span>
             <div className="direction-card-bottom"><span>{direction.tag}</span><p>{direction.note}</p></div>

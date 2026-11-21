@@ -1,0 +1,89 @@
+@import '@fontsource-variable/manrope';
+
+:root, html[data-theme='light'] {
+  --font-body: 'Manrope Variable', sans-serif;
+  --font-serif: 'Manrope Variable', sans-serif;
+  --theme-bg: #f7f4ee;
+  --theme-text: #1b2e49;
+  --theme-input-bg: #fffdf9;
+  --theme-elevation-0: #fffdf9;
+  --theme-elevation-50: #f4efe7;
+  --theme-elevation-100: #eee8df;
+  --theme-elevation-150: #e7ddce;
+  --theme-elevation-200: #d8d0c5;
+  --theme-elevation-400: #7b7c7c;
+  --theme-elevation-500: #5c6268;
+  --theme-elevation-600: #42556e;
+  --theme-elevation-700: #2f5683;
+  --theme-elevation-800: #234464;
+  --theme-elevation-900: #1b2e49;
+  --theme-elevation-1000: #172e50;
+  --style-radius-s: 6px;
+  --style-radius-m: 10px;
+  --style-radius-l: 16px;
+}
+body { font-family: var(--font-body); }
+.nav { border-right: 1px solid #e7ddce; }
+.nav-group__toggle { font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
+.nav__link { padding-block: 7px; }
+.nav__link--active { font-weight: 700; }
+.collection-list .table { background: #fffdf9; border: 1px solid #e7ddce; border-radius: 12px; overflow: auto; }
+.table td, .table th { padding-block: 16px; }
+.btn--style-primary { background: #2f5683; color: #fff; border-radius: 8px; }
+.btn--style-primary:hover { background: #234464; }
+.field-type input, .field-type textarea { border-radius: 7px; }
+.field-type input:focus-visible, .field-type textarea:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid #2f5683; outline-offset: 3px; }
+.ksm-logo { display: flex; align-items: center; gap: 16px; font-size: 15px; font-weight: 650; color: #1b2e49; }
+.ksm-logo small { display: block; margin-top: 6px; font-size: 9px; letter-spacing: .16em; color: #5c6268; }
+.ksm-logo img { flex: 0 0 56px; object-fit: contain; }
+.step-nav__home img { display: block; max-width: none; }
+.ksm-login-intro { text-align: center; margin: 28px 0; }
+.ksm-login-intro h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.04em; font-weight: 550; }
+.ksm-login-intro p { color: #5c6268; line-height: 1.7; font-size: 14px; }
+.ksm-nav-footer { border-top: 1px solid #e7ddce; margin-top: 24px; padding: 20px 0; }
+.ksm-nav-footer a { font-weight: 650; text-decoration: none; }
+.ksm-nav-footer small { display: block; max-width: 170px; margin-top: 8px; color: #5c6268; line-height: 1.5; }
+.ksm-note { background: #e7ddce; border-radius: 10px; padding: 20px; line-height: 1.7; }
+.ksm-overview { margin-block: 12px 48px; }
+.ksm-overview-header { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-bottom: 38px; }
+.ksm-eyebrow { font-size: 10px; letter-spacing: .14em; color: #5c6268; margin-bottom: 20px; }
+.ksm-overview-header h1 { font-size: clamp(30px, 3.5vw, 49px); line-height: 1.13; letter-spacing: -.045em; font-weight: 550; margin: 0 0 20px; }
+.ksm-overview-header h1 span { color: #6b7e94; }
+.ksm-overview-header p:last-child { color: #5c6268; font-size: 14px; }
+.ksm-site-button { padding: 13px 20px; border: 1px solid #d8d0c5; border-radius: 8px; text-decoration: none; white-space: nowrap; font-size: 13px; background: #fffdf9; }
+.ksm-shortcuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.ksm-shortcut { display: flex; flex-direction: column; text-decoration: none; border: 1px solid #e0d8cb; border-radius: 14px; padding: 24px; background: #fffdf9; transition: border-color 150ms, background-color 150ms; }
+.ksm-shortcut-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+.ksm-shortcut-top>span { font-size: 11px; color: #5c6268; }
+.ksm-shortcut-top b { font-size: 29px; font-weight: 450; font-variant-numeric: tabular-nums; }
+.ksm-shortcut h2 { font-size: 19px; font-weight: 600; margin: 0 0 8px; }
+.ksm-shortcut p { font-size: 12px; line-height: 1.7; color: #5c6268; margin-bottom: 26px; flex: 1; }
+.ksm-shortcut-action { border-top: 1px solid #e7ddce; padding-top: 16px; display: flex; justify-content: space-between; gap: 12px; font-size: 12px; font-weight: 650; }
+.ksm-overview-bottom { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; margin-top: 38px; }
+.ksm-overview-bottom h2 { font-size: 19px; font-weight: 600; margin-bottom: 25px; }
+.ksm-workflow { background: #172e50; color: #fffdf9; border-radius: 14px; padding: 28px; }
+.ksm-workflow ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+.ksm-workflow li { display: flex; gap: 20px; }
+.ksm-workflow li>b { font-size: 11px; color: #ded1bd; padding-top: 3px; }
+.ksm-workflow strong { font-size: 14px; font-weight: 600; }
+.ksm-workflow p { color: #d8d8d3; font-size: 12px; margin: 6px 0 0; line-height: 1.6; }
+.ksm-recent { padding: 12px 0; }
+.ksm-recent h3 { font-size: 13px; margin-top: 24px; }
+.ksm-recent p { font-size: 13px; color: #5c6268; line-height: 1.7; }
+.ksm-recent a { display: block; padding: 12px 0; border-bottom: 1px solid #e7ddce; text-decoration: none; font-size: 14px; }
+.ksm-recent small { display: block; color: #5c6268; font-size: 11px; margin-top: 5px; }
+@media (hover: hover) { .ksm-shortcut:hover { border-color: #2f5683; background: #f4efe7; } }
+@media (max-width: 1200px) { .ksm-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .ksm-overview-header { flex-direction: column; align-items: flex-start; } .ksm-overview-bottom { grid-template-columns: 1fr; } .ksm-shortcut { padding: 18px; } }
+@media (max-width: 400px) { .ksm-shortcuts { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .ksm-shortcut { transition: none; } }
+.ksm-auth-page { min-height: 100svh; display: grid; place-items: center; padding: 40px 20px; }
+.ksm-auth-card { width: min(100%, 450px); }
+.ksm-auth-card .ksm-logo { justify-content: center; }
+.ksm-auth-card form { display: grid; gap: 10px; }
+.ksm-auth-card label { margin-top: 16px; font-size: 14px; font-weight: 600; }
+.ksm-auth-card input { width: 100%; box-sizing: border-box; min-height: 50px; background: #fffdf9; color: #1b2e49; border: 1px solid #7b7c7c; border-radius: 8px; padding: 12px 14px; font: inherit; font-size: 16px; }
+.ksm-auth-card button { min-height: 50px; margin-top: 20px; border: 0; border-radius: 8px; background: #2f5683; color: white; font: inherit; font-weight: 600; cursor: pointer; }
+.ksm-auth-card button:disabled { opacity: .7; cursor: wait; }
+.ksm-auth-card input:focus-visible { outline: 2px solid #2f5683; outline-offset: 3px; }
+.ksm-auth-error { color: #9b2525; font-size: 14px; line-height: 1.6; }

@@ -1,6 +1,7 @@
 import catalog from './specialists.json'
+import { siteContent } from './content'
 
-export const asset = (name: string) => `${import.meta.env.BASE_URL}assets/clinic/${name}`
+export const asset = (name: string) => /^https?:\/\//.test(name) ? name : `${import.meta.env.BASE_URL}assets/clinic/${name}`
 
 export const clinic = {
   name: 'Клиника семейной медицины',
@@ -16,6 +17,11 @@ export const clinic = {
   preparationUrl: import.meta.env.BASE_URL + 'patients/#preparation',
   informationUrl: import.meta.env.BASE_URL + 'about/',
   patientUrl: import.meta.env.BASE_URL + 'patients/',
+  newsUrl: import.meta.env.BASE_URL + 'news/',
+  hours: 'Пн–пт 08:00–16:00 · Сб 08:00–14:00 · Вс выходной',
+  holidayHours: '',
+  warning: 'Имеются противопоказания. Необходима консультация специалиста.',
+  ...(siteContent()?.clinic || {}),
 }
 
 // Public clinic content, November 2026. Not yet approved for an official launch.
@@ -28,7 +34,7 @@ export const directions = [
   { id: 'andrology', name: 'Мужское здоровье', image: 'solovev.webp', note: 'Репродуктивное здоровье — общая история.', detail: 'Приём уролога и исследования мужского репродуктивного здоровья. Перечень обследований определяет специалист.', tag: 'Урология и диагностика' },
 ]
 
-export const specialists = catalog.doctors
+export const specialists = siteContent()?.doctors ?? catalog.doctors.map(d => ({ ...d, directions: [d.direction], showOnHome: true, available: true }))
 
 export const prices = [
   { name: 'Первичный приём репродуктолога', note: 'Консультация акушера-гинеколога с УЗИ', amount: 4500, category: 'Репродуктология' },
@@ -38,7 +44,7 @@ export const prices = [
   { name: 'Первичный приём терапевта', note: 'Осмотр и консультация', amount: 2800, category: 'Другие специалисты' },
 ]
 
-export const rubles = (amount: number) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount)
+export const rubles = (amount: number) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(amount)
 
 // Organizational summaries of the clinic pages checked on 2026-11-11.
 // Not a medical eligibility assessment or a guarantee of a quota.
@@ -80,3 +86,9 @@ export const questions = [
   { id: 'tests', question: 'Нужно ли сдавать анализы до первого визита?', answer: 'Сначала уточните это при записи. Подготовка и перечень обследований зависят от вида приёма или исследования. Не назначайте себе анализы по общему списку на сайте: необходимый объём определяет специалист.', href: clinic.preparationUrl, label: 'Раздел подготовки к исследованиям' },
   { id: 'price', question: 'Где узнать актуальную стоимость?', answer: 'В разделе «Услуги» можно сравнить стоимость по направлениям и открыть полный прайс. Перед записью подтвердите у администратора стоимость и состав выбранной услуги.', href: clinic.priceListUrl, label: 'Перейти к ценам' },
 ] as const
+
+const cms = siteContent()
+if (cms) {
+  directions.splice(0, directions.length, ...cms.directions.filter(d => d.showOnHome))
+  prices.splice(0, prices.length, ...cms.services.filter(s => s.showOnHome && s.price.amount !== null).map(s => ({ name: s.title, note: s.summary, amount: s.price.amount!, category: cms.directions.find(d => d.id === s.categoryId)?.name || '' })))
+}
