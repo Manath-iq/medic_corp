@@ -111,6 +111,21 @@ export const Specialists = content('specialists', 'Специалист', 'Сп�
   ],
 }, seo], 'Каталог клиники')
 Specialists.admin = { ...Specialists.admin, useAsTitle: 'name', defaultColumns: ['name', 'given', 'role', '_status'] }
+Specialists.hooks!.beforeDelete = [async ({ id, req }) => {
+  // Check both published data and the latest draft. Historical versions are
+  // not live references; deletion of an unused card must remain possible.
+  const references = new Set<string>()
+  for (const draft of [false, true]) {
+    for (const [collection, field, label] of [['services', 'doctors', 'Услуги'], ['prices', 'specialist', 'Цены']] as const) {
+      const result = await req.payload.find({
+        collection, draft, depth: 0, pagination: false,
+        where: { [field]: { equals: id } }, req, overrideAccess: true,
+      })
+      for (const doc of result.docs) references.add(`${label}: «${doc.title || doc.id}» (ID ${doc.id})`)
+    }
+  }
+  if (references.size) throw new APIError(`Специалист используется: ${[...references].join('; ')}. Уберите его из этих записей и сохраните изменения, затем повторите удаление. Проверьте также черновики.`, 400)
+}]
 
 export const Prices = content('prices', 'Позиция прайса', 'Цены', [
   key, text('title', 'Официальное название', true), text('sourceCode', 'Код в прайсе'),
