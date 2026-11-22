@@ -15,13 +15,22 @@ export type Content = {
   reviews: { author: string; quote: string; dateLabel: string; rating: number | null; excerpt: boolean; sourceUrl: string }[];
 }
 let content: Content | null = null
-export const siteContent = () => content
+export type RenderContext = { content: Content; url: URL; route: string }
+let serverContext: (() => RenderContext | undefined) | undefined
+// The server supplies an AsyncLocalStorage getter, never a shared request value.
+export const configureServerContext = (resolve: () => RenderContext | undefined) => { serverContext = resolve }
+export const siteContent = () => serverContext?.()?.content ?? content
+export const pageLocation = () => serverContext?.()?.url ?? new URL(window.location.href)
+export const pageRoute = () => serverContext?.()?.route ?? document.getElementById('root')!.dataset.page!
 export const cmsEnabled = Boolean(import.meta.env.VITE_CMS_URL)
 
 export async function loadContent() {
+  const embedded = document.getElementById('site-content')
+  if (embedded?.textContent) { content = JSON.parse(embedded.textContent); return }
   if (!cmsEnabled) return
+  const cmsOrigin = import.meta.env.VITE_CMS_URL === 'same-origin' ? location.origin : import.meta.env.VITE_CMS_URL
   const preview = new URLSearchParams(location.search).get('preview') === '1'
-  const response = await fetch(`${import.meta.env.VITE_CMS_URL}/api/site${preview ? '?preview=1' : ''}`, { credentials: preview ? 'include' : 'omit', signal: AbortSignal.timeout(20000), cache: 'no-store' })
+  const response = await fetch(`${cmsOrigin}/api/site${preview ? '?preview=1' : ''}`, { credentials: preview ? 'include' : 'omit', signal: AbortSignal.timeout(20000), cache: 'no-store' })
   if (!response.ok) throw new Error(preview && response.status === 401 ? 'Для предпросмотра войдите в админку в этом браузере.' : 'Не удалось загрузить данные клиники. Проверьте, запущен ли сервер админки.')
   const data = await response.json()
   if (data.schemaVersion !== 1 || !Array.isArray(data.services) || !Array.isArray(data.doctors) || !data.clinic) throw new Error('Сервер вернул неподдерживаемый формат данных.')
@@ -33,13 +42,13 @@ export async function loadContent() {
     document.body.prepend(banner)
     document.body.classList.add('cms-preview')
     window.addEventListener('message', event => {
-      if (event.origin === new URL(import.meta.env.VITE_CMS_URL).origin && event.data?.type === 'payload-live-preview') location.reload()
+      if (event.origin === new URL(cmsOrigin).origin && event.data?.type === 'payload-live-preview') location.reload()
     })
   }
 }
 
 export async function boot(render: () => Promise<unknown>) {
-  try { await loadContent(); await render() }
+  try { await loadContent(); const { applyClientSeo } = await import('./seo-client'); applyClientSeo(); await render() }
   catch (error) {
     const root = document.getElementById('root')!
     root.replaceChildren()
@@ -54,5 +63,7 @@ export async function boot(render: () => Promise<unknown>) {
 
 export function safeHref(value?: string) {
   if (!value) return undefined
-  try { const url = new URL(value, location.origin); return ['http:', 'https:', 'tel:', 'mailto:'].includes(url.protocol) ? value : undefined } catch { return undefined }
+  // Keep CMS links portable when the demo's /medic_corp/ base moves to /.
+  if (value.startsWith('/medic_corp/') && import.meta.env.BASE_URL === '/') value = value.slice('/medic_corp'.length)
+  try { const url = new URL(value, pageLocation().origin); return ['http:', 'https:', 'tel:', 'mailto:'].includes(url.protocol) ? value : undefined } catch { return undefined }
 }

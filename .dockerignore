@@ -18,6 +18,7 @@
 !news/**
 !pages/**
 !deploy/**
+!server/**
 cms/.env*
 cms/.next/**
 cms/data/**

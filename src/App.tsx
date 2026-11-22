@@ -7,7 +7,7 @@ import SiteHeader from './SiteHeader'
 import DirectionFan from './DirectionFan'
 import { LocationSection, ReviewsSection } from './ClinicTrust'
 import { FaqSection } from './LandingSections'
-import { asset, clinic, prices, rubles, specialists } from './data'
+import { asset, getClinic, getPrices, rubles, getSpecialists } from './data'
 import { specialistHref, specialistsHref } from './specialist-links'
 import { media } from './media'
 import { siteContent } from './content'
@@ -16,6 +16,7 @@ import './public-content.css'
 gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
+  const clinic = getClinic(), prices = getPrices(), specialists = getSpecialists()
   const content = siteContent()
   const h = content?.homepage
   const homeDoctors = specialists.filter(d => d.showOnHome)
@@ -110,7 +111,7 @@ export default function App() {
         <div className="container">
           <div className="compact-heading"><h2>Новости</h2><a className="text-link" href={content ? clinic.newsUrl : clinic.offersUrl}>Все новости <ArrowUpRight /></a></div>
           <div className="news-grid">
-            {content ? content.news.filter(n => n.showOnHome).slice(0, 3).map(n => <a className="news-item" key={n.id} href={`${clinic.newsUrl}?post=${encodeURIComponent(n.id)}`}><small>{n.publishedAt && new Date(n.publishedAt).toLocaleDateString('ru-RU')}</small><span>{n.title}<ArrowUpRight /></span></a>) : <><a className="news-item" href={clinic.offersUrl + '#announcements'}><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
+             {content ? content.news.filter(n => n.showOnHome).slice(0, 3).map(n => <a className="news-item" key={n.id} href={`${clinic.newsUrl}?post=${encodeURIComponent(n.id)}`}><small>{n.publishedAt && new Date(n.publishedAt).toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow' })}</small><span>{n.title}<ArrowUpRight /></span></a>) : <><a className="news-item" href={clinic.offersUrl + '#announcements'}><small>Объявление клиники</small><span>Приглашаем стать донорами ооцитов <ArrowUpRight /></span></a>
             <a className="news-item" href={clinic.firstVisitUrl}><small>Первый приём</small><span>Как проходит первое знакомство с репродуктологом <ArrowUpRight /></span></a>
             <a className="news-item" href={clinic.preparationUrl}><small>Подготовка к обследованиям</small><span>Памятка перед визитом на обследование <ArrowUpRight /></span></a></>}
           </div>

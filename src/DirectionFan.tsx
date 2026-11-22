@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from '@phosphor-icons/react'
-import { directions } from './data'
+import { getDirections } from './data'
 import { categoryHref } from './services-links'
 import { media } from './media'
 import type { MediaSlot } from './media'
@@ -9,10 +9,12 @@ import type { MediaSlot } from './media'
 // Arc/rotation vocabulary adapted from the user's DENTIS fan-carousel.js.
 // No cloned focus targets, autoplay, perpetual frame loop, or hidden unique copy.
 export default function DirectionFan() {
+  const directions = getDirections()
   if (!directions.length) return null
   return <DirectionFanContent />
 }
 function DirectionFanContent() {
+  const directions = getDirections()
   const [center, setCenter] = useState(0)
   const [drag, setDrag] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -26,7 +28,7 @@ function DirectionFanContent() {
   const advance = (delta: number) => setCenter(slot => slot + delta)
   const choose = (index: number) => advance(indexAt(index - selected + count / 2) - count / 2)
   const position = center - drag / (step * .9)
-  const [width, setWidth] = useState(window.innerWidth)
+  const [width, setWidth] = useState(1440)
   const radius = Math.ceil(width / (2 * step * .9)) + 3
 
   useEffect(() => {

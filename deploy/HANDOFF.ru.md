@@ -33,7 +33,7 @@ ssh -i ~/.ssh/medic_corp_hostkey -o IdentitiesOnly=yes root@clinic.manath.site
 ```sh
 cd /opt/medic-demo/app
 docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml ps
-docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml logs --tail 50 cms web
+docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml logs --tail 50 cms site web
 ```
 
 Секреты: `/opt/medic-demo/runtime.env`, начальный пароль CMS:
@@ -43,19 +43,22 @@ docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml logs
 
 ## Как устроен запуск
 
-1. Vite собирает сайт в `dist` с `--base /` и `VITE_CMS_URL=PUBLIC_ORIGIN`.
+1. Vite собирает браузерную часть в `dist`, SSR — в `dist-server`, с `--base /`
+   и `VITE_CMS_URL=same-origin`. Node-сервис `site` рендерит опубликованные данные CMS.
 2. Next собирает серверную CMS; запуск через `next start`, НЕ `next dev`.
-3. Caddy выдаёт HTML/JS/CSS, а `/admin`, `/api`, `/_next` направляет в CMS.
+3. Caddy выдаёт JS/CSS/изображения, HTML направляет в `site`, а `/admin`, `/api`,
+   `/_next` — в CMS. Sitemap и robots формируются SSR-сервером.
 4. Данные находятся в `/opt/medic-demo/storage`, не внутри Docker-образа.
    SQLite: `data/clinic.db`, медиа: `uploads`, история: `data/document-history`.
-5. Внешние порты — 22/80/443. Порт CMS 3001 не публикуется. Docker может обходить
+5. Внешние порты — 22/80/443. CMS 3001 и SSR 4175 не публикуются. Docker может обходить
    UFW, поэтому запрет в UFW не заменяет отсутствие port mapping у CMS.
 6. `restart: unless-stopped` поднимает сервисы после перезагрузки.
 7. Caddy перенаправляет старые `/medic_corp/...` ссылки на `/...`, сохраняя query.
-8. Robots и X-Robots-Tag запрещают индексацию, но не являются защитой от просмотра.
+8. При `SEO_INDEXABLE=false` robots и X-Robots-Tag запрещают индексацию, но не
+   являются защитой от просмотра. Это режим по умолчанию для демо.
 
 GitHub Actions продолжает публиковать отдельный статический вариант на Pages.
-GitHub Pages не поддерживает эту CMS. Push в GitHub не обновляет VPS автоматически.
+GitHub Pages не поддерживает CMS/SSR. Push в GitHub не обновляет VPS автоматически.
 
 ## Перед переносом
 
@@ -104,6 +107,7 @@ PUBLIC_ORIGIN=https://clinic.customer.example
 PAYLOAD_SECRET=REPLACE_WITH_A_LONG_RANDOM_SECRET
 HTTP_BIND=0.0.0.0:80
 HTTPS_BIND=0.0.0.0:443
+SEO_INDEXABLE=false
 ```
 
 PUBLIC_ORIGIN — без завершающего `/`. Смена PAYLOAD_SECRET завершает старые сессии;
@@ -118,8 +122,8 @@ docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml buil
 docker compose --env-file /opt/medic-demo/runtime.env -f deploy/compose.yml up -d --wait
 ```
 
-URL встраивается при сборке обоих образов. Одного restart после смены домена
-недостаточно. 80/443 должны быть доступны извне: Caddy получит и будет продлевать
+Конфигурация CMS зависит от URL при сборке. Одного restart после смены домена
+недостаточно: пересобрать и проверить три сервиса. 80/443 должны быть доступны извне: Caddy получит и будет продлевать
 сертификат. Не запускать повторные выпуски сертификата в цикле при ошибке DNS.
 
 Первое демо было развёрнуто копией уже заполненной локальной SQLite. Production
@@ -133,6 +137,7 @@ Payload migrations, проверенных на копии актуальной 
 Установить `deploy/medic-demo-backup.service` и `.timer` в `/etc/systemd/system/`,
 выполнить daemon-reload, enable --now timer. Ночной backup: 03:15 UTC + до 10 минут,
 14 дней хранения. CMS кратко останавливается для согласованности базы и файлов.
+В этот промежуток SSR может возвращать 503 — это не непрерывное резервирование.
 Обязательно настроить внешнее хранение: локальный диск VPS не защищает от его потери.
 В текущем демо есть разовая внешняя копия на Mac, но не регулярное внешнее расписание.
 
@@ -158,5 +163,6 @@ Payload migrations, проверенных на копии актуальной 
   удалить лишние доступы разработчиков только после проверки доступа владельца.
 
 Перед официальным запуском отдельно решить юридические материалы, персональные
-данные, размещение, SEO/серверный HTML и стабильные URL. Форм пациентов, 1С и
+данные, размещение и карту 301 старых URL; выполнить [SEO-чек-лист](SEO.ru.md).
+Серверный HTML реализован; индексация демо намеренно закрыта. Форм пациентов, 1С и
 почтового восстановления пароля в этой поставке нет.

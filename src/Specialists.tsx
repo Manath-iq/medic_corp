@@ -1,25 +1,30 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Clock, MapPin, Phone } from '@phosphor-icons/react'
-import { asset, clinic, specialists as specialistProfiles } from './data'
-import { services as serviceCatalog, priceLabel } from './services-data'
+import { asset, getClinic, getSpecialists } from './data'
+import { getServices, priceLabel } from './services-data'
 import { serviceHref } from './services-links'
-import { siteContent, safeHref } from './content'
+import { siteContent, safeHref, pageLocation } from './content'
 import SiteHeader from './SiteHeader'
 import Footer from './Footer'
 import { specialistHref, specialistsHref } from './specialist-links'
 import catalog from './specialists.json'
 
 const home = import.meta.env.BASE_URL
-const availableDirections = siteContent()?.directions ?? catalog.directions
-const filters = [{ id: '', label: 'Все специалисты' }, ...availableDirections.filter(d => specialistProfiles.some(s => s.directions.includes(d.id)))]
-type Filter = typeof filters[number]
-const initialDirection = new URLSearchParams(window.location.search).get('direction')
-const initialFilter = filters.find(item => item.id === initialDirection) ?? filters[0]
-const directoryHref = specialistsHref + (initialFilter.id ? `?direction=${initialFilter.id}` : '')
-const prodoctorov = safeHref(siteContent()?.clinic.prodoctorovUrl || 'https://prodoctorov.ru/kazan/lpu/39363-ksm/otzivi/')
-type Doctor = typeof specialistProfiles[number]
+function directoryData() {
+  const availableDirections = siteContent()?.directions ?? catalog.directions
+  const specialistProfiles = getSpecialists()
+  const filters = [{ id: '', label: 'Все специалисты' }, ...availableDirections.filter(d => specialistProfiles.some(s => s.directions.includes(d.id)))]
+  const initialDirection = pageLocation().searchParams.get('direction')
+  const initialFilter = filters.find(item => item.id === initialDirection) ?? filters[0]
+  return { availableDirections, specialistProfiles, filters, initialFilter,
+    directoryHref: specialistsHref + (initialFilter.id ? `?direction=${initialFilter.id}` : ''),
+    prodoctorov: safeHref(siteContent()?.clinic.prodoctorovUrl || 'https://prodoctorov.ru/kazan/lpu/39363-ksm/otzivi/') }
+}
+type Filter = ReturnType<typeof directoryData>['filters'][number]
+type Doctor = ReturnType<typeof getSpecialists>[number]
 
 function DoctorCard({ doctor, href }: { doctor: Doctor; href: string }) {
+  const { availableDirections } = directoryData()
   return <article className="team-card">
     <div className="team-portrait">
       {doctor.image ? <img src={asset(doctor.image)} alt="" width="450" height="675" /> : <span className="doctor-placeholder">{doctor.name[0]}{doctor.given[0]}</span>}
@@ -37,6 +42,8 @@ function DoctorCard({ doctor, href }: { doctor: Doctor; href: string }) {
 }
 
 function Directory() {
+  const clinic = getClinic()
+  const { initialFilter, specialistProfiles, filters, prodoctorov } = directoryData()
   const [filter, setFilter] = useState(initialFilter)
   const visible = specialistProfiles.filter(doctor => !filter.id || doctor.directions.includes(filter.id))
 
@@ -53,7 +60,7 @@ function Directory() {
     </section>
     <section aria-label="Каталог специалистов">
       <div className="team-toolbar">
-        <div className="team-filters" role="group" aria-label="Направление">{filters.map(item => <button key={item.id} type="button" aria-pressed={filter === item} onClick={() => changeFilter(item)}>{item.label}</button>)}</div>
+        <div className="team-filters" role="group" aria-label="Направление">{filters.map(item => <button key={item.id} type="button" aria-pressed={filter.id === item.id} onClick={() => changeFilter(item)}>{item.label}</button>)}</div>
         <span role="status">Найдено: {visible.length}</span>
       </div>
       <div className="team-grid">{visible.map(doctor => <DoctorCard doctor={doctor} href={specialistHref(doctor.id, filter.id)} key={doctor.id} />)}</div>
@@ -64,6 +71,8 @@ function Directory() {
 }
 
 function Profile({ doctor }: { doctor: Doctor }) {
+  const clinic = getClinic(), serviceCatalog = getServices()
+  const { availableDirections, directoryHref, prodoctorov } = directoryData()
   const appointment = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     if (window.location.hash !== '#appointment') return
@@ -119,6 +128,7 @@ function Profile({ doctor }: { doctor: Doctor }) {
 }
 
 export default function Specialists({ doctor, missing = false }: { doctor?: Doctor; missing?: boolean }) {
+  const { directoryHref } = directoryData()
   return <div className="team-page">
     <a className="skip-link" href="#team-main">Перейти к содержимому</a>
     <SiteHeader home={home} />

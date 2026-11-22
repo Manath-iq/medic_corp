@@ -2,23 +2,21 @@ import { useEffect } from 'react'
 import { Phone, ArrowUpRight } from '@phosphor-icons/react'
 import SiteHeader from './SiteHeader'
 import Footer from './Footer'
-import { clinic } from './data'
-import { safeHref, siteContent } from './content'
+import { getClinic } from './data'
+import { safeHref, siteContent, pageRoute, pageLocation } from './content'
 import RichText from './RichText'
 import Publications from './Publications'
 
 export default function Information() {
-  const route = document.getElementById('root')!.dataset.page!
-  const key = route === 'pages' ? new URLSearchParams(location.search).get('page') || '' : route
+  const clinic = getClinic()
+  const route = pageRoute()
+  const key = route === 'pages' ? pageLocation().searchParams.get('page') || '' : route
   const content = siteContent()!
   const page = content.pages.find(p => p.id === key)
   const c = content.clinic
   const home = import.meta.env.BASE_URL
   const title = key === 'contacts' ? 'Контакты' : page?.title || 'Страница не найдена'
   useEffect(() => {
-    if (key !== 'offers' && key !== 'news') document.title = page?.seoTitle || `${title} | ${clinic.name}`
-    const description = document.querySelector('meta[name="description"]')
-    if (description && page?.seoDescription) description.setAttribute('content', page.seoDescription)
     const target = document.getElementById(location.hash.slice(1))
     if (target instanceof HTMLDetailsElement) target.open = true
     target?.scrollIntoView({ behavior: 'instant' })

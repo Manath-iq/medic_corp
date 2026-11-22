@@ -15,6 +15,11 @@
     "test:cms": "node --import tsx scripts/test-cms.ts",
     "test:cms:browser": "node scripts/verify-cms.mjs",
     "build": "tsc -b && vite build",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-server",
+    "start:seo": "node server/index.mjs",
+    "build:production": "VITE_CMS_URL=same-origin npm run build -- --base / && VITE_CMS_URL=same-origin npm run build:ssr -- --base /",
+    "test:seo": "node --import tsx scripts/test-seo.ts",
+    "test:seo:browser": "node scripts/verify-seo.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {

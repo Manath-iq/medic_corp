@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, List, Phone, X } from '@phosphor-icons/react'
-import { asset, clinic } from './data'
+import { asset, getClinic } from './data'
+import { pageLocation } from './content'
 import { specialistsHref } from './specialist-links'
 import { servicesHref } from './services-links'
-import { cmsEnabled } from './content'
+import { cmsEnabled, siteContent } from './content'
 
-const nav = [
+export default function SiteHeader({ home = '' }: { home?: string }) {
+  const clinic = getClinic()
+  const nav = [
   [specialistsHref, 'Специалисты'], [servicesHref, 'Услуги'],
   [clinic.offersUrl, 'Акции'],
   [clinic.omsUrl, 'ЭКО по ОМС'], [clinic.patientUrl, 'Пациентам'],
   [clinic.informationUrl, 'О клинике'], [clinic.contactsUrl, 'Контакты'],
-  ...(cmsEnabled ? [[clinic.newsUrl, 'Новости']] : []),
+  ...(cmsEnabled || siteContent() ? [[clinic.newsUrl, 'Новости']] : []),
 ]
-
-export default function SiteHeader({ home = '' }: { home?: string }) {
-  const currentPage = window.location.pathname
+  const currentPage = pageLocation().pathname
   const isCurrent = (href: string) => currentPage.replace(/index\.html$/, '').replace(/\/$/, '') === href.replace(/\/$/, '')
   const root = useRef<HTMLElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)

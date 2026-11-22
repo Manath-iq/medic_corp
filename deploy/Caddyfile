@@ -1,30 +1,35 @@
 {$PUBLIC_ORIGIN} {
   encode zstd gzip
   header {
-    X-Robots-Tag "noindex, nofollow, noarchive"
     X-Content-Type-Options nosniff
+    X-Frame-Options SAMEORIGIN
     Referrer-Policy strict-origin-when-cross-origin
     -Server
   }
   request_body {
     max_size 20MB
   }
-  handle /robots.txt {
-    respond <<ROBOTS
-User-agent: *
-Disallow: /
-ROBOTS 200
-  }
   # Preserve links stored by the local demo without changing its database.
   handle_path /medic_corp/* {
     redir {uri} 308
   }
-  @cms path /admin /admin/* /api/* /_next/* /clinic-logo.webp
-  handle @cms {
+  # Published media must remain crawlable after launch. CMS still checks access.
+  @publicFiles path /api/media/file/* /api/document/*
+  handle @publicFiles {
     reverse_proxy cms:3001
   }
-  handle {
+  @cms path /admin /admin/* /api/* /_next/* /clinic-logo.webp
+  handle @cms {
+    header X-Robots-Tag "noindex, nofollow"
+    reverse_proxy cms:3001
+  }
+  @static path /assets/* /icons/*
+  handle @static {
     root * /srv/site
+    header Cache-Control "public, max-age=3600"
     file_server
+  }
+  handle {
+    reverse_proxy site:4175
   }
 }

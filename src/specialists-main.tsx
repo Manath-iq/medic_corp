@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { mount } from './mount'
 import '@fontsource-variable/manrope'
 import './styles.css'
 import './specialists.css'
@@ -7,13 +7,11 @@ import { boot } from './content'
 
 void boot(async () => {
 const { default: Specialists } = await import('./Specialists')
-const { specialists } = await import('./data')
+const { getSpecialists } = await import('./data')
 const id = new URLSearchParams(window.location.search).get('doctor')
-const doctor = specialists.find(item => item.id === id)
-if (id && !doctor) document.title = 'Специалист не найден | КСМ'
-if (doctor) document.title = `${doctor.name} ${doctor.given} | КСМ, Казань`
+const doctor = getSpecialists().find(item => item.id === id)
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+mount(
   <React.StrictMode>
     <Specialists doctor={doctor} missing={Boolean(id && !doctor)} />
   </React.StrictMode>,

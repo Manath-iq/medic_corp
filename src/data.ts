@@ -21,8 +21,8 @@ export const clinic = {
   hours: 'Пн–пт 08:00–16:00 · Сб 08:00–14:00 · Вс выходной',
   holidayHours: '',
   warning: 'Имеются противопоказания. Необходима консультация специалиста.',
-  ...(siteContent()?.clinic || {}),
 }
+export const getClinic = () => ({ ...clinic, ...siteContent()?.clinic })
 
 // Public clinic content, November 2026. Not yet approved for an official launch.
 export const directions = [
@@ -34,7 +34,8 @@ export const directions = [
   { id: 'andrology', name: 'Мужское здоровье', image: 'solovev.webp', note: 'Репродуктивное здоровье — общая история.', detail: 'Приём уролога и исследования мужского репродуктивного здоровья. Перечень обследований определяет специалист.', tag: 'Урология и диагностика' },
 ]
 
-export const specialists = siteContent()?.doctors ?? catalog.doctors.map(d => ({ ...d, directions: [d.direction], showOnHome: true, available: true }))
+export const specialists = catalog.doctors.map(d => ({ ...d, directions: [d.direction], showOnHome: true, available: true }))
+export const getSpecialists = () => siteContent()?.doctors ?? specialists
 
 export const prices = [
   { name: 'Первичный приём репродуктолога', note: 'Консультация акушера-гинеколога с УЗИ', amount: 4500, category: 'Репродуктология' },
@@ -87,8 +88,5 @@ export const questions = [
   { id: 'price', question: 'Где узнать актуальную стоимость?', answer: 'В разделе «Услуги» можно сравнить стоимость по направлениям и открыть полный прайс. Перед записью подтвердите у администратора стоимость и состав выбранной услуги.', href: clinic.priceListUrl, label: 'Перейти к ценам' },
 ] as const
 
-const cms = siteContent()
-if (cms) {
-  directions.splice(0, directions.length, ...cms.directions.filter(d => d.showOnHome))
-  prices.splice(0, prices.length, ...cms.services.filter(s => s.showOnHome && s.price.amount !== null).map(s => ({ name: s.title, note: s.summary, amount: s.price.amount!, category: cms.directions.find(d => d.id === s.categoryId)?.name || '' })))
-}
+export const getDirections = () => siteContent()?.directions.filter(d => d.showOnHome) ?? directions
+export const getPrices = () => siteContent()?.services.filter(s => s.showOnHome && s.price.amount !== null).map(s => ({ name: s.title, note: s.summary, amount: s.price.amount!, category: siteContent()?.directions.find(d => d.id === s.categoryId)?.name || '' })) ?? prices

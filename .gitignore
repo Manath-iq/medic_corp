@@ -27,3 +27,4 @@ cms/.next/
 cms/data/
 cms/uploads/
 cms/*.tsbuildinfo
+dist-server/

@@ -1,9 +1,10 @@
 import { ArrowUpRight } from '@phosphor-icons/react'
-import { asset, clinic } from './data'
+import { asset, getClinic } from './data'
 
 const home = import.meta.env.BASE_URL
 
 export default function Footer() {
+  const clinic = getClinic()
   return <footer id="footer" className="footer">
     <div className="container">
       <a className="footer-home" href={home + '#main'} aria-label="Клиника семейной медицины, на главную">

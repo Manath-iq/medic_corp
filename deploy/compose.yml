@@ -28,6 +28,29 @@ services:
     logging:
       driver: json-file
       options: { max-size: 10m, max-file: '3' }
+  site:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: site
+      args:
+        PUBLIC_ORIGIN: ${PUBLIC_ORIGIN}
+    restart: unless-stopped
+    init: true
+    environment:
+      SITE_URL: ${PUBLIC_ORIGIN}
+      SEO_INDEXABLE: ${SEO_INDEXABLE:-false}
+      CMS_INTERNAL_URL: http://cms:3001
+    depends_on:
+      cms: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4175/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: '3' }
   web:
     build:
       context: ..
@@ -46,6 +69,7 @@ services:
       - caddy_config:/config
     depends_on:
       cms: { condition: service_healthy }
+      site: { condition: service_healthy }
     logging:
       driver: json-file
       options: { max-size: 10m, max-file: '3' }

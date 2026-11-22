@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, MagnifyingGlass, Phone, X } from '@phosphor-icons/react'
 import SiteHeader from './SiteHeader'
 import Footer from './Footer'
-import { asset, clinic, specialists } from './data'
+import { asset, getClinic, getSpecialists } from './data'
 import { specialistHref } from './specialist-links'
-import { priceLabel, serviceCategories, services } from './services-data'
+import { priceLabel, getServiceCategories, getServices } from './services-data'
 import { categoryHref, serviceHref, servicesHref } from './services-links'
 import type { Service } from './services-data'
-import { siteContent, safeHref } from './content'
+import { siteContent, safeHref, pageLocation } from './content'
 
 const home = import.meta.env.BASE_URL
 const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim()
 
 function Appointment({ service }: { service: Service }) {
+  const clinic = getClinic()
   return <aside className="svc-appointment">
     <span className="svc-small">{service.price.kind === 'oms' ? 'Условия программы' : 'Стоимость услуги'}</span>
     <h2>{priceLabel(service)}</h2>
@@ -25,6 +26,7 @@ function Appointment({ service }: { service: Service }) {
 }
 
 function Details({ service, back }: { service: Service; back: string }) {
+  const clinic = getClinic(), specialists = getSpecialists(), serviceCategories = getServiceCategories()
   const category = serviceCategories.find(item => item.id === service.categoryId)!
   const doctors = specialists.filter(doctor => service.doctorIds.includes(doctor.id))
   return <>
@@ -43,8 +45,9 @@ function Details({ service, back }: { service: Service; back: string }) {
 }
 
 function Directory() {
+  const clinic = getClinic(), services = getServices(), serviceCategories = getServiceCategories()
   const managedFaq = siteContent()?.faq.filter(q => q.placement.includes('services'))
-  const initial = new URLSearchParams(window.location.search)
+  const initial = new URLSearchParams(pageLocation().search)
   const [category, setCategory] = useState(serviceCategories.some(item => item.id === initial.get('category')) ? initial.get('category')! : 'all')
   const [query, setQuery] = useState(initial.get('q') || '')
   useEffect(() => {
@@ -95,11 +98,11 @@ function Directory() {
 }
 
 export default function Services() {
-  const params = new URLSearchParams(window.location.search)
+  const services = getServices()
+  const params = new URLSearchParams(pageLocation().search)
   const id = params.get('service')
   const service = services.find(item => item.id === id)
   params.delete('service')
   const back = servicesHref + (params.size ? '?' + params.toString() : '')
-  useEffect(() => { document.title = service ? service.seoTitle || `${service.title} | ${clinic.name}` : id ? 'Услуга не найдена | КСМ' : 'Услуги и цены | КСМ, Казань'; const el = document.querySelector('meta[name="description"]'); if (el && service) el.setAttribute('content', service.seoDescription || service.summary) }, [id, service])
   return <div className="svc-page"><a className="skip-link" href="#main">Перейти к содержимому</a><SiteHeader home={home} /><main id="main" className="svc-shell">{id ? service ? <Details service={service} back={back} /> : <section className="svc-empty"><h1>Услуга не найдена</h1><p>Возможно, ссылка изменилась. Выберите услугу в каталоге.</p><a className="button button-primary" href={servicesHref}>Все услуги</a></section> : <Directory />}</main><Footer /></div>
 }

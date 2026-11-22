@@ -1,10 +1,11 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, MapPin, NavigationArrow, Star } from '@phosphor-icons/react'
-import { clinic } from './data'
+import { getClinic } from './data'
 import { yandexClinic, yandexReviews } from './yandex'
 import { safeHref, siteContent } from './content'
 
 export function ReviewsSection() {
+  const clinic = getClinic()
   const track = useRef<HTMLDivElement>(null)
   const reviews = siteContent()?.reviews ?? yandexReviews
   function move(step: number) {
@@ -41,6 +42,7 @@ export function ReviewsSection() {
 }
 
 export function LocationSection() {
+  const clinic = getClinic()
   const c = siteContent()?.clinic
   const location = c ? { ...yandexClinic, mapAddress: c.mapAddress, routeUrl: c.routeUrl, url: c.mapUrl, embedUrl: `https://yandex.ru/map-widget/v1/?ll=${c.lng}%2C${c.lat}&z=17&pt=${c.lng}%2C${c.lat}%2Cpm2rdm&l=map&lang=ru_RU` } : yandexClinic
   const [mapEnabled, setMapEnabled] = useState(false)

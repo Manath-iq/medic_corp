@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react'
 import { ArrowUpRight, MapPin, Plus } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { asset, clinic, firstSteps, omsRoutes, questions } from './data'
+import { asset, getClinic, firstSteps, omsRoutes, questions } from './data'
 import { media } from './media'
 import { safeHref, siteContent } from './content'
 
@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger)
 type Region = keyof typeof omsRoutes
 
 export function OmsSection() {
+  const clinic = getClinic()
   const [region, setRegion] = useState<Region>('tatarstan')
   const route = omsRoutes[region]
   const image = media('oms')
@@ -51,6 +52,7 @@ export function OmsSection() {
 }
 
 export function StartSection() {
+  const clinic = getClinic()
   const list = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -103,6 +105,7 @@ export function StartSection() {
 }
 
 export function AboutSection() {
+  const clinic = getClinic()
   return <section id="about" className="about-section section container" aria-labelledby="about-title">
     <div className="about-layout">
       <figure className="about-visual" data-reveal><img src={asset('diagnostics.webp')} alt="Ультразвуковой аппарат — фотография клиники" width={1140} height={648} loading="lazy" /><figcaption><MapPin aria-hidden="true" /><span>Казань, Зур Урам, 33<small>Клиника семейной медицины</small></span></figcaption></figure>
