@@ -112,7 +112,7 @@ function DirectionFanContent() {
   const current = directions[selected]
   return <section id="directions" className="directions section">
     <div className="container directions-heading" data-reveal>
-      <div><p className="section-kicker">Рядом на каждом этапе</p><h2><span className="desktop-copy">У каждой истории<br />свой первый шаг.</span><span className="mobile-copy">Направления<br />клиники.</span></h2></div>
+      <div><p className="section-kicker">Рядом на каждом этапе</p><h2><span className="desktop-copy">У каждой истории<br />свой первый шаг</span><span className="mobile-copy">Направления<br />клиники</span></h2></div>
       <div className="directions-controls">
         <span className="counter" aria-hidden="true">0{selected + 1}<span> / 0{count}</span></span>
         <button className="icon-button" onClick={() => advance(-1)} aria-label="Предыдущее направление"><ArrowLeft /></button>
@@ -149,7 +149,7 @@ function DirectionFanContent() {
             <img src={/^https?:/.test(direction.image) ? direction.image : media(direction.id as MediaSlot).src} alt="" width={450} height={675} loading="lazy" fetchPriority="low" draggable={false} />
             <span className="direction-label">{direction.name}</span>
             <span className="direction-select" aria-hidden="true"><ArrowUpRight /></span>
-            <div className="direction-card-bottom"><span>{direction.tag}</span><p>{direction.note}</p></div>
+            <div className="direction-card-bottom"><span>{direction.tag}</span><p>{direction.note.replace(/\.\s*$/, '')}</p></div>
             <button type="button" className="direction-hitarea" aria-label={index === selected ? `${direction.name}. Следующее направление` : `Выбрать: ${direction.name}`} aria-pressed={index === selected} tabIndex={absolute > 2.5 ? -1 : 0} onClick={() => index === selected ? advance(1) : setCenter(slot)} />
           </li>
         })}

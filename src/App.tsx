@@ -57,7 +57,7 @@ export default function App() {
         <div className="hero-slab">
           <div className="hero-copy">
             <p className="hero-context"><span className="signal-dot" />{h?.context ?? 'Репродуктивное здоровье · Казань'}</p>
-            <h1 id="hero-title" className="hero-title"><span className="desktop-copy preserve-lines">{h ? h.title : <>Большая мечта<br />начинается<br /><span className="hero-title-accent">с первого шага.</span></>}</span><span className="mobile-copy preserve-lines">{h ? h.mobileTitle || h.title : <>Лечение бесплодия<br /><span className="hero-title-accent">и ЭКО.</span></>}</span></h1>
+            <h1 id="hero-title" className="hero-title"><span className="desktop-copy preserve-lines">{h ? h.title.replace(/\.\s*$/, '') : <>Большая мечта<br />начинается<br /><span className="hero-title-accent">с первого шага</span></>}</span><span className="mobile-copy preserve-lines">{h ? (h.mobileTitle || h.title).replace(/\.\s*$/, '') : <>Лечение бесплодия<br /><span className="hero-title-accent">и ЭКО</span></>}</span></h1>
             <div className="hero-support"><p className="hero-lead"><span className="desktop-copy preserve-lines">{h?.lead ?? 'Диагностика, лечение бесплодия и ЭКО. Рядом, чтобы помочь вам найти свой путь.'}</span><span className="mobile-copy">{h?.mobileLead || h?.lead || 'Репродуктологи, гинекологи и эмбриологи в Казани.'}</span></p><div className="hero-actions"><a href="#contact" className="button button-primary">{h?.ctaLabel || 'Записаться на приём'} <ArrowUpRight /></a></div></div>
             <div className="hero-location"><span>{clinic.name}</span><span>{clinic.address}</span></div>
           </div>
